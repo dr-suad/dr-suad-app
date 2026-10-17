@@ -1,33 +1,48 @@
-import SectionTitle from '../components/SectionTitle.jsx';
+import { useState } from 'react';
 import styles from '../App.module.css';
+import AdventureGame from '../components/AdventureGame.jsx';
+import MatchGame from '../components/MatchGame.jsx';
+import QuickMath from '../components/QuickMath.jsx';
+import SectionTitle from '../components/SectionTitle.jsx';
 
 export default function Games() {
+  const [activeGame, setActiveGame] = useState(null);
+
+  const openGame = (game) => setActiveGame(game);
+  const closeGame = () => setActiveGame(null);
+
+  if (activeGame === 'adventure') {
+    return <AdventureGame onClose={closeGame} />;
+  }
+  if (activeGame === 'match') {
+    return <MatchGame onClose={closeGame} />;
+  }
+  if (activeGame === 'quickmath') {
+    return <QuickMath onClose={closeGame} />;
+  }
+
   return (
-    <section className="games-section" id="games">
-      <div className="container">
+    <section className={styles.gamesSection} id="games">
+      <div className={styles.container}>
         <SectionTitle title="الألعاب التعليمية" />
         <div className={styles.gamesGrid}>
-          <div className={styles.gameCategory}>
-            <h3>ألعاب تفاعلية</h3>
-            <p>ألعاب رقمية على الحاسوب أو الجهاز اللوحي</p>
-            <div className={styles.gameChips}>
-              {['الصف الأول', 'الصف الثاني', 'الصف الثالث', 'الصف الرابع'].map((g, i) => (
-                <button key={i} className={styles.chip} style={{ borderColor: '#FF6B6B' }}>
-                  {g}
-                </button>
-              ))}
-            </div>
+          <div className={styles.gameCard} onClick={() => openGame('adventure')}>
+            <div className={styles.gameIcon}>🥕</div>
+            <h3>مغامرة الأرنب</h3>
+            <p>10 تحديات رياضية للوصول لجزرة الذهبية</p>
+            <span className={styles.gameBtn}>ابدأ المغامرة 🥕</span>
           </div>
-          <div className={styles.gameCategory}>
-            <h3>ألعاب حركية</h3>
-            <p>أنشطة حركية تربط الرياضيات بالحركة واللعب</p>
-            <div className={styles.gameChips}>
-              {['الصف الأول', 'الصف الثاني', 'الصف الثالث', 'الصف الرابع'].map((g, i) => (
-                <button key={i} className={styles.chip} style={{ borderColor: '#6BCB77' }}>
-                  {g}
-                </button>
-              ))}
-            </div>
+          <div className={styles.gameCard} onClick={() => openGame('match')}>
+            <div className={styles.gameIcon}>🔺</div>
+            <h3>مطابقة الأشكال</h3>
+            <p>ربط الشكل بالاسم الصحيح في 30 ثانية</p>
+            <span className={styles.gameBtn}>اللعبة الآن 🔺</span>
+          </div>
+          <div className={styles.gameCard} onClick={() => openGame('quickmath')}>
+            <div className={styles.gameIcon}>⚡</div>
+            <h3>احسب بسرعة</h3>
+            <p>60 ثانية من المسائل الحسابية السريعة</p>
+            <span className={styles.gameBtn}>حسب بسرعة ⚡</span>
           </div>
         </div>
       </div>

@@ -1,0 +1,243 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 45, 45, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(6px);
+}
+
+.card {
+  background: linear-gradient(135deg, #FFF4E6, #FFE8CC);
+  border-radius: 24px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  position: relative;
+  animation: slideUp 0.4s var(--smooth);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.stationNumber {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--coral);
+  background: rgba(255, 107, 107, 0.2);
+  padding: 0.25rem 1rem;
+  border-radius: 99px;
+}
+
+.closeBtn {
+  background: var(--text-soft);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.closeBtn:hover {
+  background: var(--coral);
+}
+
+.story {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.emoji {
+  font-size: 3rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+.storyText {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  color: var(--text-soft);
+}
+
+.question {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 1.5rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.option {
+  background: #fff;
+  border: 3px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1rem;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s var(--smooth);
+}
+
+.option:hover:not(:disabled) {
+  border-color: var(--coral);
+  transform: translateX(5px);
+}
+
+.option.selected {
+  border-color: var(--lime);
+  background: #f0fdf4;
+  box-shadow: var(--glow-mint);
+}
+
+.status {
+  min-height: 40px;
+}
+
+.statusText {
+  font-weight: 800;
+}
+
+.statusText.correct {
+  color: var(--mint);
+  animation: pulse 0.5s ease-in-out;
+}
+
+.statusText.wrong {
+  color: var(--coral);
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.shake {
+  animation: shake 0.6s ease-in-out;
+}
+
+.resultOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 45, 45, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  backdrop-filter: blur(10px);
+}
+
+.resultCard {
+  background: linear-gradient(135deg, #FFE8CC, #FFF6E5);
+  border-radius: 28px;
+  padding: 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  animation: slideUp 0.5s var(--smooth);
+}
+
+.celebration {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  animation: spin 4s linear infinite;
+}
+
+.resultTitle {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.resultText {
+  color: var(--text-soft);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resultActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.closeBtn {
+  background: linear-gradient(135deg, var(--coral), #FF6B6B);
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 16px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s var(--smooth);
+}
+
+.closeBtn:hover {
+  transform: scale(1.05);
+  box-shadow: var(--glow-coral);
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem;
+  }
+
+  .question {
+    font-size: 1.2rem;
+  }
+
+  .option {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+}

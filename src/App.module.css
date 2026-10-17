@@ -55,6 +55,79 @@
 @media (min-width: 1024px) {
   .classesGrid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
 }
+/* Games */
+.gamesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.gameCard {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  text-align: center;
+  transition: transform 0.3s var(--smooth), box-shadow 0.3s var(--smooth);
+  cursor: pointer;
+  border: 3px solid transparent;
+}
+
+.gameCard:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--glow-sun);
+  border-color: var(--coral);
+}
+
+.gameIcon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  animation: float 2s ease-in-out infinite;
+}
+
+.gameCard h3 {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.25rem;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.gameCard p {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.gameBtn {
+  background: linear-gradient(135deg, var(--coral), #FF6B6B);
+  color: #fff;
+  padding: 10px 24px;
+  border-radius: 99px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s var(--smooth), box-shadow 0.2s var(--smooth);
+}
+
+.gameBtn:hover {
+  transform: scale(1.05);
+  box-shadow: var(--glow-coral);
+}
+
+@media (max-width: 768px) {
+  .classesGrid, .plansGrid, .videosGrid, .gamesGrid {
+    grid-template-columns: 1fr;
+  }
+  .options {
+    grid-template-columns: 1fr;
+  }
+  .score {
+    font-size: 2rem;
+  }
+}
 
 .section {
   padding: 48px 0;

@@ -1,0 +1,209 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 45, 45, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(6px);
+}
+
+.card {
+  background: linear-gradient(135deg, #E8F5E9, #F1F8E9);
+  border-radius: 24px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  animation: slideUp 0.4s var(--smooth);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.score {
+  background: var(--mint);
+  color: var(--text);
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-weight: 800;
+  font-size: 1rem;
+  font-family: 'Cairo', sans-serif;
+}
+
+.timer {
+  background: var(--coral);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-weight: 800;
+  font-size: 1rem;
+  font-family: 'Cairo', sans-serif;
+}
+
+.closeBtn {
+  background: var(--text-soft);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.closeBtn:hover {
+  background: var(--coral);
+}
+
+.questionArea {
+  margin-bottom: 1.5rem;
+}
+
+.emoji {
+  font-size: 4rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+.questionText {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  color: var(--text-soft);
+  margin-top: 0.5rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.option {
+  background: #fff;
+  border: 3px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1rem;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s var(--smooth);
+}
+
+.option:hover {
+  border-color: var(--mint);
+  transform: translateX(5px);
+}
+
+.status {
+  margin-top: 1rem;
+}
+
+.warning {
+  color: var(--coral);
+  font-weight: 800;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.resultOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 45, 45, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  backdrop-filter: blur(10px);
+}
+
+.resultCard {
+  background: linear-gradient(135deg, #E8F5E9, #F1F8E9);
+  border-radius: 28px;
+  padding: 2.5rem;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  animation: slideUp 0.5s var(--smooth);
+}
+
+.celebration {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.resultTitle {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.resultText {
+  color: var(--text-soft);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resultActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.closeBtn {
+  background: var(--mint);
+  color: var(--text);
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 16px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s var(--smooth);
+}
+
+.closeBtn:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 1.5rem;
+  }
+
+  .emoji {
+    font-size: 3rem;
+  }
+
+  .option {
+    font-size: 0.9rem;
+    padding: 0.75rem;
+  }
+}
