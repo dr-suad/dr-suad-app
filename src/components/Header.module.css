@@ -1,0 +1,73 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 254, 249, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(45, 45, 45, 0.08);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+}
+
+.brand h1 {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--coral);
+  margin-bottom: 4px;
+}
+
+.brand p {
+  font-size: 0.85rem;
+  color: var(--text-soft);
+}
+
+.menu-toggle {
+  font-size: 1.5rem;
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: var(--bg-soft);
+}
+
+.main-nav {
+  display: none;
+}
+
+.nav-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  justify-content: flex-end;
+}
+
+.nav-list li a {
+  display: block;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  color: var(--text-soft);
+  transition: all 0.2s var(--smooth);
+}
+
+.nav-list li a:hover {
+  background: var(--bg-soft);
+  color: var(--text);
+}
+
+@media (min-width: 1024px) {
+  .menu-toggle {
+    display: none;
+  }
+  .main-nav {
+    display: block;
+  }
+}

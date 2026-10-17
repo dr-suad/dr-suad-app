@@ -1,0 +1,50 @@
+.class-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  transition: transform 0.3s var(--smooth), box-shadow 0.3s var(--smooth);
+  display: flex;
+  flex-direction: column;
+}
+
+.class-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(61, 61, 61, 0.15);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.emoji {
+  font-size: 2rem;
+}
+
+.number {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.25rem;
+  font-family: 'Cairo', sans-serif;
+}
+
+.class-card h3 {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+.class-card p {
+  font-size: 0.95rem;
+  color: var(--text-soft);
+  line-height: 1.6;
+}

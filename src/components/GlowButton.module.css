@@ -1,0 +1,16 @@
+.glow-btn {
+  padding: 12px 28px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--smooth);
+  outline: none;
+}
+
+.glow-btn:focus-visible {
+  outline: 3px solid var(--coral);
+  outline-offset: 2px;
+}
