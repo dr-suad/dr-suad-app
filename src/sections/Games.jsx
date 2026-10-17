@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import styles from '../App.module.css';
 import SectionTitle from '../components/SectionTitle.jsx';
 import AdventureGame from '../components/AdventureGame.jsx';
 import MatchGame from '../components/MatchGame.jsx';
