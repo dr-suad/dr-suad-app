@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import styles from '../App.module.css';
+import SectionTitle from '../components/SectionTitle.jsx';
 import AdventureGame from '../components/AdventureGame.jsx';
 import MatchGame from '../components/MatchGame.jsx';
 import QuickMath from '../components/QuickMath.jsx';
@@ -14,7 +14,10 @@ import TreasureMap from '../components/games/TreasureMap.jsx';
 import OliveGarden from '../components/games/OliveGarden.jsx';
 import JusticeScale from '../components/games/JusticeScale.jsx';
 import KunafaParty from '../components/games/KunafaParty.jsx';
-import SectionTitle from '../components/SectionTitle.jsx';
+import MillionBank from '../components/games/MillionBank.jsx';
+import PlaceValue from '../components/games/PlaceValue.jsx';
+import ExpandedForm from '../components/games/ExpandedForm.jsx';
+import NumberTrain from '../components/games/NumberTrain.jsx';
 
 const GAMES = [
   { key: 'adventure', icon: '🥕', title: 'مغامرة الأرنب', desc: '10 تحديات رياضية للوصول لجزرة الذهبية', btn: 'ابدأ المغامرة 🥕' },
@@ -30,10 +33,13 @@ const GAMES = [
   { key: 'olive', icon: '🫒', title: 'بستان الزيتون', desc: 'ازرع وحصد الزيتون بالحساب', btn: 'ابدأ الحصاد 🫒' },
   { key: 'justice', icon: '⚖️', title: 'ميزان العدل', desc: 'توازن المعادلات الرياضية', btn: 'تحقق من التوازن ⚖️' },
   { key: 'kunafa', icon: '🍮', title: 'طبق الكنافة', desc: 'قسم الكنافة بعدل بين الأفراد', btn: 'قسم الآن 🍮' },
+  { key: 'million', icon: '🏦', title: 'مصرف الملايين', desc: 'قراءة وكتابة الأعداد ضمن الملايين', btn: 'العب الآن 🏦' },
+  { key: 'placevalue', icon: '🏠', title: 'القيمة المنزلية', desc: 'تحديد قيمة الرقم في العدد', btn: 'العب الآن 🏠' },
+  { key: 'expanded', icon: '🧩', title: 'الصورة الموسعة', desc: 'تحويل العدد إلى صورة موسعة', btn: 'العب الآن 🧩' },
+  { key: 'train', icon: '🚂', title: 'قطار الأعداد', desc: 'مقارنة وترتيب الأعداد الكبيرة', btn: 'العب الآن 🚂' },
 ];
 
 const COMPONENTS = {
-  adventure: AdventureGame,
   match: MatchGame,
   quickmath: QuickMath,
   clean: CleanNeighborhood,
@@ -45,7 +51,10 @@ const COMPONENTS = {
   treasure: TreasureMap,
   olive: OliveGarden,
   justice: JusticeScale,
-  kunafa: KunafaParty,
+  million: MillionBank,
+  placevalue: PlaceValue,
+  expanded: ExpandedForm,
+  train: NumberTrain,
 };
 
 export default function Games() {

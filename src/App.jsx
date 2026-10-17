@@ -17,6 +17,8 @@ import DailyChallenge from './components/DailyChallenge.jsx';
 import Stories from './components/Stories.jsx';
 import ParentReport from './components/ParentReport.jsx';
 import RecoveryPath from './components/RecoveryPath.jsx';
+import FloatingBackground from './components/FloatingBackground.jsx';
+import FloatingButtons from './components/FloatingButtons.jsx';
 import { useStars } from './hooks/useStars.js';
 import { useToast } from './hooks/useToast.js';
 import { useMascot } from './context/MascotContext.jsx';
@@ -35,7 +37,13 @@ export default function App() {
 
   return (
     <div className={styles.app}>
+      <FloatingBackground />
       <Header stars={stars} dark={dark} onThemeToggle={() => setDark(!dark)} />
+      <FloatingButtons
+        onPlay={() => document.getElementById('games')?.scrollIntoView({ behavior: 'smooth' })}
+        onStory={() => document.getElementById('stories')?.scrollIntoView({ behavior: 'smooth' })}
+        onChallenge={() => document.getElementById('dailyChallenge')?.scrollIntoView({ behavior: 'smooth' })}
+      />
       <main className={styles.mainContent}>
         <Hero onExplore={() => document.getElementById('classes')?.scrollIntoView({ behavior: 'smooth' })} />
         <RecoveryPath showToast={show} />

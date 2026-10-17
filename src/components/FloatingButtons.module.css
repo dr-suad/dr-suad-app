@@ -1,0 +1,60 @@
+.buttons {
+  position: fixed;
+  z-index: 100;
+  pointer-events: none;
+  width: 100vw;
+  height: 100vh;
+}
+
+.button {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 22px;
+  border-radius: 16px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s var(--smooth), box-shadow 0.2s var(--smooth);
+  will-change: transform;
+}
+
+.buttonPlay {
+  top: 24px;
+  left: 24px;
+}
+
+.buttonStory {
+  top: 24px;
+  right: 24px;
+}
+
+.buttonChallenge {
+  bottom: 24px;
+  right: 24px;
+}
+
+.buttonIcon {
+  font-size: 1.4rem;
+}
+
+.buttonText {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .buttonText {
+    display: inline;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    animation: none !important;
+  }
+}

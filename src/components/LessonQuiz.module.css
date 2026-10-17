@@ -1,0 +1,114 @@
+.quizContainer {
+  padding: 24px;
+  background: var(--bg-soft);
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.quizHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.quizTitle {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.quizProgress {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+}
+
+.quizBody {
+  text-align: center;
+}
+
+.quizQuestion {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.optionsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.optionBtn {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s var(--smooth);
+}
+
+.optionBtn:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.optionBtn.correct {
+  border-color: var(--success);
+  background: var(--success-light);
+  color: var(--success-text);
+}
+
+.optionBtn.wrong {
+  border-color: var(--error);
+  background: var(--error-light);
+  color: var(--error-text);
+}
+
+.feedback {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+}
+
+.feedbackOk {
+  color: var(--success-text);
+}
+
+.feedbackNo {
+  color: var(--error-text);
+}
+
+.nextBtn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s var(--smooth);
+}
+
+.nextBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .optionBtn, .nextBtn {
+    transition: none !important;
+  }
+}
