@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import styles from './QuickMath.module.css';
+import { useAdaptive } from '../hooks/useAdaptive.js';
 
 export default function QuickMath({ onClose }) {
   const [question, setQuestion] = useState({ text: '', answer: 0 });
@@ -7,6 +8,7 @@ export default function QuickMath({ onClose }) {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(60);
   const [gameOver, setGameOver] = useState(false);
+  const { level, levelKey, recordAnswer } = useAdaptive();
 
   useEffect(() => {
     generateQuestion();
@@ -24,8 +26,13 @@ export default function QuickMath({ onClose }) {
   }, []);
 
   const generateQuestion = () => {
-    const a = Math.floor(Math.random() * 10) + 1;
-    const b = Math.floor(Math.random() * 10) + 1;
+    let max;
+    if (levelKey === 'easy') max = 5;
+    else if (levelKey === 'medium') max = 10;
+    else max = 20;
+
+    const a = Math.floor(Math.random() * max) + 1;
+    const b = Math.floor(Math.random() * max) + 1;
     const isPlus = Math.random() > 0.5;
     const answer = isPlus ? a + b : a - b;
     const text = `${a} ${isPlus ? '+' : '-'} ${b} = ؟`;
@@ -41,7 +48,9 @@ export default function QuickMath({ onClose }) {
 
   const handleAnswer = (selected) => {
     if (gameOver) return;
-    if (selected === question.answer) {
+    const isCorrect = selected === question.answer;
+    recordAnswer(isCorrect);
+    if (isCorrect) {
       setScore(score + 10);
       generateQuestion();
     }
@@ -54,6 +63,7 @@ export default function QuickMath({ onClose }) {
           <button onClick={onClose} className={styles.closeBtn}>✕</button>
           <div className={styles.timer}>⏱️ {timeLeft}s</div>
           <div className={styles.score}>النقاط: {score}</div>
+          <div className={styles.level}>المستوى: {level}</div>
         </div>
 
         {gameOver ? (

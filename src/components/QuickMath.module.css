@@ -137,3 +137,13 @@
   .options { grid-template-columns: 1fr; }
   .questionText { font-size: 1.5rem; }
 }
+
+.level {
+  background: var(--sky);
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-weight: 800;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+}

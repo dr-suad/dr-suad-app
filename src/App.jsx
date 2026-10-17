@@ -14,6 +14,8 @@ import Confetti from './components/Confetti.jsx';
 import AchievementTree from './components/AchievementTree.jsx';
 import LearningPath from './components/LearningPath.jsx';
 import DailyChallenge from './components/DailyChallenge.jsx';
+import Stories from './components/Stories.jsx';
+import ParentReport from './components/ParentReport.jsx';
 import { useStars } from './hooks/useStars.js';
 import { useToast } from './hooks/useToast.js';
 import { useMascot } from './context/MascotContext.jsx';
@@ -42,6 +44,7 @@ export default function App() {
         <Plans showToast={show} />
         <Videos showToast={show} />
         <Games showToast={show} />
+        <Stories showToast={show} />
         <Assessment onStart={() => setConfetti(true)} showToast={show} />
         <About />
       </main>

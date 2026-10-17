@@ -1,5 +1,6 @@
 import styles from './Header.module.css';
 import { useSound } from '../hooks/useSound.js';
+import ParentReport from './ParentReport.jsx';
 
 export default function Header({ stars, dark, onThemeToggle }) {
   const { muted, toggleMute, play } = useSound();
@@ -21,6 +22,7 @@ export default function Header({ stars, dark, onThemeToggle }) {
           <button className={styles.themeToggle} aria-label="تبديل الوضع الليلي" onClick={onThemeToggle}>
             {dark ? '☀️' : '🌙'}
           </button>
+          <ParentReport />
           <button className={styles.hamburger} aria-label="فتح القائمة الرئيسية">
             <span></span>
             <span></span>
