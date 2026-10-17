@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './App.module.css';
 import Header from './components/Header.jsx';
 import Hero from './components/Hero.jsx';
@@ -13,12 +13,19 @@ import Toast from './components/Toast.jsx';
 import Confetti from './components/Confetti.jsx';
 import { useStars } from './hooks/useStars.js';
 import { useToast } from './hooks/useToast.js';
+import { useMascot } from './context/MascotContext.jsx';
+import Mascot from './components/Mascot.jsx';
 
 export default function App() {
   const { stars } = useStars();
   const { toast, show } = useToast();
+  const { say } = useMascot();
   const [dark, setDark] = useState(false);
   const [confetti, setConfetti] = useState(false);
+
+  useEffect(() => {
+    say('أهلاً بك يا بطل! أنا الأرنب ذكي. هل نلعب معاً؟ 🎉');
+  }, [say]);
 
   return (
     <div className={styles.app}>
@@ -35,6 +42,7 @@ export default function App() {
       <Footer />
       <Toast toast={toast} />
       <Confetti active={confetti} />
+      <Mascot />
     </div>
   );
 }

@@ -1,6 +1,9 @@
 import styles from './Header.module.css';
+import { useSound } from '../hooks/useSound.js';
 
 export default function Header({ stars, dark, onThemeToggle }) {
+  const { muted, toggleMute, play } = useSound();
+
   return (
     <header className={styles.header}>
       <div className={styles.headerInner}>
@@ -12,6 +15,9 @@ export default function Header({ stars, dark, onThemeToggle }) {
           <div className={styles.starsCounter}>
             ⭐ {stars}
           </div>
+          <button className={styles.soundToggle} aria-label="كتم/تشغيل الصوت" onClick={() => { toggleMute(); if (!muted) play('click'); }}>
+            {muted ? '🔇' : '🔊'}
+          </button>
           <button className={styles.themeToggle} aria-label="تبديل الوضع الليلي" onClick={onThemeToggle}>
             {dark ? '☀️' : '🌙'}
           </button>

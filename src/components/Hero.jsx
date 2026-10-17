@@ -1,9 +1,20 @@
 import { motion } from 'framer-motion';
 import FloatingShapes from '../components/FloatingShapes.jsx';
 import GlowButton from '../components/GlowButton.jsx';
+import { useSound } from '../hooks/useSound.js';
+import { useMascot } from '../context/MascotContext.jsx';
 import styles from './Hero.module.css';
 
 export default function Hero({ onExplore }) {
+  const { play } = useSound();
+  const { say } = useMascot();
+
+  const handleExplore = () => {
+    play('click');
+    say('يااااااي! هيا نلعب ونكتشف! 🚀');
+    onExplore();
+  };
+
   return (
     <section className={styles.hero}>
       <FloatingShapes />
@@ -31,7 +42,7 @@ export default function Hero({ onExplore }) {
           transition={{ duration: 0.6, delay: 0.4 }}
           className={styles.heroCta}
         >
-          <GlowButton variant="mint" onClick={onExplore}>
+          <GlowButton variant="mint" onClick={handleExplore}>
             استكشف الصفوف
           </GlowButton>
         </motion.div>
