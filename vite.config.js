@@ -9,7 +9,7 @@ export default defineConfig({
   root: __dirname,
   base: '/dr-suad-app/',
   build: {
-    outDir: '../dist',
+    outDir: 'dist',
   },
   server: {
     port: 5173,
