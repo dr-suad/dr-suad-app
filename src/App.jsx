@@ -16,6 +16,7 @@ import LearningPath from './components/LearningPath.jsx';
 import DailyChallenge from './components/DailyChallenge.jsx';
 import Stories from './components/Stories.jsx';
 import ParentReport from './components/ParentReport.jsx';
+import RecoveryPath from './components/RecoveryPath.jsx';
 import { useStars } from './hooks/useStars.js';
 import { useToast } from './hooks/useToast.js';
 import { useMascot } from './context/MascotContext.jsx';
@@ -37,6 +38,7 @@ export default function App() {
       <Header stars={stars} dark={dark} onThemeToggle={() => setDark(!dark)} />
       <main className={styles.mainContent}>
         <Hero onExplore={() => document.getElementById('classes')?.scrollIntoView({ behavior: 'smooth' })} />
+        <RecoveryPath showToast={show} />
         <AchievementTree showToast={show} />
         <LearningPath showToast={show} />
         <DailyChallenge showToast={show} />

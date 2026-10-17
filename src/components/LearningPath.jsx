@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useMascot } from '../context/MascotContext.jsx';
 import { useProgress } from '../hooks/useProgress.js';
 import { playCelebration } from '../utils/sounds.js';
@@ -34,21 +35,33 @@ export default function LearningPath({ showToast }) {
       <div className={styles.container}>
         <h2 className={styles.sectionTitle}>خريطة التعلم</h2>
         <div className={styles.path}>
-          {LESSONS.map((lesson) => {
+          {LESSONS.map((lesson, i) => {
             const completed = isLessonCompleted(lesson.id);
             return (
-              <div key={lesson.id} className={styles.lessonItem}>
-                <div
+              <motion.div
+                key={lesson.id}
+                className={styles.lessonItem}
+                initial={{ opacity: 0, scale: 0.6 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.4, delay: i * 0.06 }}
+                whileHover={{ y: -4 }}
+              >
+                <motion.div
                   className={`${styles.lessonCircle} ${completed ? styles.completed : ''}`}
                   onClick={() => handleComplete(lesson.id)}
                   role="button"
                   tabIndex={0}
                   title={lesson.title}
+                  animate={completed ? { scale: [1, 1.25, 1] } : {}}
+                  transition={{ duration: 0.45 }}
+                  whileHover={{ scale: 1.12 }}
+                  whileTap={{ scale: 0.92 }}
                 >
                   {completed ? '✅' : '🔒'}
-                </div>
+                </motion.div>
                 <span className={styles.lessonTitle}>{lesson.title}</span>
-              </div>
+              </motion.div>
             );
           })}
         </div>

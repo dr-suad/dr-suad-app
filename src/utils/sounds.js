@@ -36,3 +36,26 @@ export function playCelebration() {
   }
   playTone(800, 'sine', 0.5, 0.4);
 }
+
+export function playLevelUp() {
+  playTone(523.25, 'sine', 0.12, 0);
+  playTone(659.25, 'sine', 0.12, 0.1);
+  playTone(783.99, 'sine', 0.12, 0.2);
+  playTone(1046.5, 'sine', 0.35, 0.3);
+}
+
+export function playBadge() {
+  playTone(659.25, 'triangle', 0.15, 0);
+  playTone(880, 'triangle', 0.15, 0.12);
+  playTone(1108.73, 'triangle', 0.3, 0.24);
+}
+
+export function playSad() {
+  playTone(392, 'sine', 0.3, 0);
+  playTone(349.23, 'sine', 0.3, 0.2);
+  playTone(311.13, 'sine', 0.45, 0.4);
+}
+
+export function playStep() {
+  playTone(440, 'square', 0.06, 0);
+}

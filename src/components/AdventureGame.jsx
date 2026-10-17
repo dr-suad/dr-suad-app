@@ -1,5 +1,8 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './AdventureGame.module.css';
+import { playSuccess, playError, playStep, playCelebration } from '../utils/sounds.js';
+import GlowButton from './GlowButton.jsx';
 
 const STORY = [
   { id: 1, title: 'مصباح الغابة', emoji: '🌲', question: 'كم هو ٢ + ٣؟', options: ['٤', '٥', '٦', '٧'], correct: 1 },
@@ -26,13 +29,17 @@ export default function AdventureGame({ onClose, onComplete }) {
     setSelected(index);
     if (index === STORY[station].correct) {
       setCorrect(correct + 1);
+      playSuccess();
+      playStep();
       if (station < STORY.length - 1) {
         setStation(station + 1);
         setSelected(null);
       } else {
         setShowResult(true);
+        playCelebration();
       }
     } else {
+      playError();
       setShaking(true);
       setTimeout(() => setShaking(false), 500);
       setTimeout(() => {
@@ -65,43 +72,77 @@ export default function AdventureGame({ onClose, onComplete }) {
   }
 
   return (
-    <div className={`${styles.overlay} ${shaking ? styles.shake : ''}`}>
-      <div className={styles.card}>
+    <motion.div
+      className={styles.overlay}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className={styles.card}
+        animate={shaking ? { x: [0, -12, 12, -8, 8, 0] } : { x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className={styles.header}>
           <span className={styles.stationNumber}>المحطة {station + 1}</span>
           <button className={styles.closeBtn} onClick={onClose}>✕</button>
         </div>
 
         <div className={styles.story}>
-          <span className={styles.emoji}>{STORY[station].emoji}</span>
+          <motion.span
+            key={station}
+            className={styles.emoji}
+            initial={{ scale: 0, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 14 }}
+          >
+            {STORY[station].emoji}
+          </motion.span>
           <span className={styles.storyText}>
             أرنب {STORY[station].title}
           </span>
         </div>
 
-        <div className={styles.question}>{STORY[station].question}</div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={station}
+            className={styles.question}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            {STORY[station].question}
+          </motion.div>
+        </AnimatePresence>
 
         <div className={styles.options}>
           {STORY[station].options.map((opt, i) => (
-            <button
+            <motion.button
               key={i}
               className={`${styles.option} ${selected === i ? styles.selected : ''}`}
               onClick={() => handleAnswer(i)}
               disabled={selected !== null}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.94 }}
             >
               {opt}
-            </button>
+            </motion.button>
           ))}
         </div>
 
         <div className={styles.status}>
           {(selected !== null) && (
-            <span className={`${styles.statusText} ${selected === STORY[station].correct ? styles.correct : styles.wrong} `}>
+            <motion.span
+              className={`${styles.statusText} ${selected === STORY[station].correct ? styles.correct : styles.wrong} `}
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+            >
               {selected === STORY[station].correct ? 'إجابة صحيحة! ⭐' : 'إجابة خاطئة، حاول مرة أخرى 😅'}
-            </span>
+            </motion.span>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -208,3 +208,31 @@
 @media (max-width: 480px) {
   .options { grid-template-columns: 1fr; }
 }
+
+.questionArea {
+  margin-top: 0.5rem;
+}
+
+.cardGlowBtn {
+  margin-top: 6px;
+  width: 100%;
+}
+
+.valueBadge {
+  background: var(--mint);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cardValue {
+  background: #f0fdf4;
+  color: var(--mint);
+  padding: 4px 10px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}

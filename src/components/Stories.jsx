@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './Stories.module.css';
 import { playSuccess, playError } from '../utils/sounds.js';
+import GlowButton from './GlowButton.jsx';
 
 const STORIES = [
   {
@@ -18,6 +20,7 @@ const STORIES = [
     question: 'كم فاكهة اشترى سامي؟',
     options: ['3', '4', '5', '6'],
     answer: '5',
+    value: '🤝 التعاون مع الأم',
   },
   {
     id: 2,
@@ -33,6 +36,7 @@ const STORIES = [
     question: 'كم فراشة بقيت في الحديقة؟',
     options: ['4', '5', '6', '7'],
     answer: '5',
+    value: '🌱 نظافة المكان',
   },
   {
     id: 3,
@@ -48,6 +52,7 @@ const STORIES = [
     question: 'كم حلوى أخذ كل صديق؟',
     options: ['2', '3', '4', '6'],
     answer: '3',
+    value: '🤝 التعاون',
   },
   {
     id: 4,
@@ -63,6 +68,103 @@ const STORIES = [
     question: 'ما محيط الغرفة؟',
     options: ['9 م', '18 م', '20 م', '40 م'],
     answer: '18',
+    value: '🧹 النظافة الشخصية',
+  },
+  {
+    id: 5,
+    classId: 1,
+    title: 'أرانب خديجة',
+    emoji: '🐰',
+    scene: '🐰🐰🐰🐰 + 🐰🐰',
+    lines: [
+      'عند خديجة 4 أرانب 🐰🐰🐰🐰',
+      'أحضرت لها أمها أرانبين آخرين 🐰🐰',
+      'كم أرنب أصبح لدى خديجة؟',
+    ],
+    question: 'كم أرنب أصبح لدى خديجة؟',
+    options: ['4', '5', '6', '7'],
+    answer: '6',
+    value: '🐰 الرفق بالحيوان',
+  },
+  {
+    id: 6,
+    classId: 2,
+    title: 'دراجة عمر',
+    emoji: '🚲',
+    scene: '🚲 15km - 🚲 6km',
+    lines: [
+      'قطع عمر 15 كيلومتراً على دراجته 🚲',
+      'توقف للراحة بعد 6 كيلومترات',
+      'كم كيلومتراً تبقّى لعمر؟',
+    ],
+    question: 'كم كيلومتراً تبقّى لعمر؟',
+    options: ['7', '8', '9', '10'],
+    answer: '9',
+    value: '🚲 السلامة والرياضة',
+  },
+  {
+    id: 7,
+    classId: 3,
+    title: 'كتاب يوسف',
+    emoji: '📚',
+    scene: '📚 8 × 6 صفحات',
+    lines: [
+      'يقرأ يوسف 6 صفحات كل يوم 📚',
+      'كم صفحة سيقرأ في 8 أيام؟',
+      'الفكرة: العدد × الأيام',
+    ],
+    question: 'كم صفحة سيقرأ يوسف في 8 أيام؟',
+    options: ['36', '42', '48', '56'],
+    answer: '48',
+    value: '📚 حب القراءة',
+  },
+  {
+    id: 8,
+    classId: 4,
+    title: 'عسل النحل 🍯',
+    emoji: '🐝',
+    scene: '🍯 3/4 × 20',
+    lines: [
+      'لدى النحل 20 كغ من العسل 🍯',
+      'أعطى 3/4 منها للجيران',
+      'كم كيلوغراماً أبقى النحل؟',
+    ],
+    question: 'كم كغ أبقى النحل؟',
+    options: ['4', '5', '10', '15'],
+    answer: '5',
+    value: '🤝 المشاركة مع الجيران',
+  },
+  {
+    id: 9,
+    classId: 1,
+    title: 'طيور الحديقة',
+    emoji: '🐦',
+    scene: '🐦🐦🐦🐦🐦🐦🐦 - 🐦🐦',
+    lines: [
+      'في الشجرة 7 طيور 🐦🐦🐦🐦🐦🐦🐦',
+      'طارت طائران بعيداً 🐦🐦',
+      'كم طائراً بقي في الشجرة؟',
+    ],
+    question: 'كم طائراً بقي؟',
+    options: ['4', '5', '6', '7'],
+    answer: '5',
+    value: '🐦 حماية الطيور',
+  },
+  {
+    id: 10,
+    classId: 3,
+    title: 'عملة مجد',
+    emoji: '🪙',
+    scene: '🪙 96 ÷ 6',
+    lines: [
+      'جمعت مجد 96 عملة ذهبية 🪙',
+      'أرادت توزيعها بالتساوي على 6 أخوات',
+      'كم عملة لكل أخت؟',
+    ],
+    question: 'كم عملة لكل أخت؟',
+    options: ['12', '14', '16', '18'],
+    answer: '16',
+    value: '👧 العدل بين الإخوة',
   },
 ];
 
@@ -101,20 +203,48 @@ export default function Stories({ showToast }) {
 
   if (openStory) {
     return (
-      <div className={styles.overlay}>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>
-            <h2 className={styles.storyTitle}>{openStory.title}</h2>
-            <button className={styles.closeBtn} onClick={close} aria-label="إغلاق القصة">✕</button>
-          </div>
+      <AnimatePresence>
+        <motion.div
+          className={styles.overlay}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div
+            className={styles.modal}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ type: 'spring', damping: 20 }}
+          >
+            <div className={styles.modalHeader}>
+              <h2 className={styles.storyTitle}>{openStory.title}</h2>
+              {openStory.value && <span className={styles.valueBadge}>{openStory.value}</span>}
+              <button className={styles.closeBtn} onClick={close} aria-label="إغلاق القصة">✕</button>
+            </div>
 
-          <div className={styles.scene}>{openStory.scene}</div>
+            <motion.div
+              className={styles.scene}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.15 }}
+            >
+              {openStory.scene}
+            </motion.div>
 
-          <div className={styles.lines}>
-            {openStory.lines.map((line, i) => (
-              <p key={i} className={styles.line}>{line}</p>
-            ))}
-          </div>
+            <div className={styles.lines}>
+              {openStory.lines.map((line, i) => (
+                <motion.p
+                  key={i}
+                  className={styles.line}
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.25 + i * 0.12 }}
+                >
+                  {line}
+                </motion.p>
+              ))}
+            </div>
 
           <div className={styles.questionArea}>
             <p className={styles.question}>{openStory.question}</p>
@@ -143,8 +273,9 @@ export default function Stories({ showToast }) {
               )}
             </div>
           )}
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
     );
   }
 
@@ -154,17 +285,24 @@ export default function Stories({ showToast }) {
         <h2 className={styles.sectionTitle}>قصص مصورة 📖</h2>
         <p className={styles.sectionDesc}>قصص ممتعة تجمع بين القراءة والحساب!</p>
         <div className={styles.grid}>
-          {STORIES.map((story) => (
-            <button
+          {STORIES.map((story, i) => (
+            <motion.button
               key={story.id}
               className={styles.storyCard}
               onClick={() => open(story)}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.45, delay: (i % 5) * 0.08 }}
+              whileHover={{ scale: 1.05, y: -6 }}
+              whileTap={{ scale: 0.96 }}
             >
               <span className={styles.cardEmoji}>{story.emoji}</span>
               <span className={styles.cardTitle}>{story.title}</span>
               <span className={styles.cardBadge}>الصف {['الأول', 'الثاني', 'الثالث', 'الرابع'][story.classId - 1]}</span>
-              <span className={styles.cardBtn}>اقرأ القصة 📖</span>
-            </button>
+              {story.value && <span className={styles.cardValue}>{story.value}</span>}
+              <GlowButton variant="lavender" className={styles.cardGlowBtn}>اقرأ القصة 📖</GlowButton>
+            </motion.button>
           ))}
         </div>
       </div>

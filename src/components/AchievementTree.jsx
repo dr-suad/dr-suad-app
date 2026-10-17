@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useMascot } from '../context/MascotContext.jsx';
 import { useProgress } from '../hooks/useProgress.js';
 import styles from './AchievementTree.module.css';
@@ -29,7 +30,15 @@ export default function AchievementTree({ showToast }) {
     <section className={styles.treeSection}>
       <div className={styles.treeContainer}>
         <div className={styles.tree} onClick={handleClick} role="button" tabIndex={0}>
-          <span className={styles.treeEmoji}>{level.emoji}</span>
+          <motion.span
+            className={styles.treeEmoji}
+            key={level.emoji}
+            initial={{ scale: 0.4, rotate: -10 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 12 }}
+          >
+            {level.emoji}
+          </motion.span>
           <span className={styles.treeLabel}>{level.label}</span>
         </div>
         <div className={styles.progressText}>
