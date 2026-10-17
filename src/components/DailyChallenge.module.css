@@ -1,0 +1,122 @@
+.challengeSection {
+  padding: 32px 0;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.challengeCard {
+  background: linear-gradient(135deg, var(--grad-1));
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--glow-sun);
+  color: #fff;
+  text-align: center;
+}
+
+.challengeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.streak {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.challengeTitle {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.5rem;
+  margin-bottom: 24px;
+}
+
+.questions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.questionCard {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.questionText {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.option {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s var(--smooth);
+}
+
+.option:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.4);
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+.option:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.celebration {
+  margin-top: 20px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .options {
+    grid-template-columns: 1fr;
+  }
+  .challengeCard {
+    padding: 20px;
+  }
+}

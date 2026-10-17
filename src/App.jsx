@@ -11,6 +11,9 @@ import About from './sections/About.jsx';
 import Footer from './sections/Footer.jsx';
 import Toast from './components/Toast.jsx';
 import Confetti from './components/Confetti.jsx';
+import AchievementTree from './components/AchievementTree.jsx';
+import LearningPath from './components/LearningPath.jsx';
+import DailyChallenge from './components/DailyChallenge.jsx';
 import { useStars } from './hooks/useStars.js';
 import { useToast } from './hooks/useToast.js';
 import { useMascot } from './context/MascotContext.jsx';
@@ -32,6 +35,9 @@ export default function App() {
       <Header stars={stars} dark={dark} onThemeToggle={() => setDark(!dark)} />
       <main className={styles.mainContent}>
         <Hero onExplore={() => document.getElementById('classes')?.scrollIntoView({ behavior: 'smooth' })} />
+        <AchievementTree showToast={show} />
+        <LearningPath showToast={show} />
+        <DailyChallenge showToast={show} />
         <Classes showToast={show} />
         <Plans showToast={show} />
         <Videos showToast={show} />
