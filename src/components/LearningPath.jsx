@@ -25,7 +25,7 @@ export default function LearningPath({ showToast }) {
     completeLesson(lessonId);
     playCelebration();
     const count = getCompletedCount() + 1;
-    say(`تم إكمال الدرس! कुल ${count} درساً مكتملاً 🎉`);
+    say(`تم إكمال الدرس! إجمالي ${count} درساً مكتملاً 🎉`);
     if (showToast) showToast(`تم إكمال الدرس بنجاح! 🎉`, 'success');
   };
 

@@ -13,7 +13,7 @@
   border-radius: var(--radius);
   padding: 32px;
   box-shadow: var(--glow-sun);
-  color: #fff;
+  color: #2D2D2D;
   text-align: center;
 }
 
@@ -75,7 +75,7 @@
   border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 12px;
   padding: 12px;
-  color: #fff;
+  color: #2D2D2D;
   font-weight: 800;
   font-size: 1rem;
   cursor: pointer;
@@ -91,6 +91,10 @@
 .option:disabled {
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.option.answered {
+  opacity: 0.5;
 }
 
 .celebration {

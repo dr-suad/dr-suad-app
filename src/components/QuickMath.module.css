@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(45, 45, 45, 0.7);
+  background: rgba(45, 45, 45, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,15 +10,15 @@
   backdrop-filter: blur(6px);
 }
 
-.card {
-  background: linear-gradient(135deg, #FFF8E1, #FFF3E0);
+.modal {
+  background: #FFFFFF;
   border-radius: 24px;
-  padding: 2rem;
-  max-width: 600px;
+  padding: 1.5rem;
+  max-width: 500px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   text-align: center;
-  animation: slideUp 0.4s var(--smooth);
+  animation: slideUp 0.4s ease;
 }
 
 .header {
@@ -28,28 +28,8 @@
   margin-bottom: 1.5rem;
 }
 
-.score {
-  background: var(--sunshine);
-  color: var(--text);
-  padding: 0.4rem 1rem;
-  border-radius: 99px;
-  font-weight: 800;
-  font-size: 1rem;
-  font-family: 'Cairo', sans-serif;
-}
-
-.timer {
-  background: var(--coral);
-  color: #fff;
-  padding: 0.4rem 1rem;
-  border-radius: 99px;
-  font-weight: 800;
-  font-size: 1rem;
-  font-family: 'Cairo', sans-serif;
-}
-
 .closeBtn {
-  background: var(--text-soft);
+  background: #6B6B6B;
   color: #fff;
   border: none;
   width: 40px;
@@ -57,123 +37,94 @@
   border-radius: 50%;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.2s;
 }
 
 .closeBtn:hover {
-  background: var(--coral);
+  background: #2D2D2D;
 }
 
-.questionArea {
-  font-size: 2rem;
+.timer {
+  background: #4D96FF;
+  color: #fff;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-weight: 800;
+  font-family: 'Cairo', sans-serif;
+}
+
+.score {
+  background: #FFD93D;
+  color: #2D2D2D;
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  font-weight: 800;
+  font-family: 'Cairo', sans-serif;
+}
+
+.question {
   margin-bottom: 1.5rem;
 }
 
-.equation {
+.questionText {
   font-family: 'Cairo', sans-serif;
+  font-size: 2rem;
   font-weight: 800;
-  color: var(--text-soft);
-}
-
-.equationSymbol {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 800;
-  color: var(--text);
-}
-
-.symbol {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 800;
-  color: var(--mint);
-  font-size: 2.5rem;
-  margin: 0 0.5rem;
-}
-
-.equationB {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 800;
-  color: var(--text);
-}
-
-.equationResult {
-  font-family: 'Cairo', sans-serif;
-  font-weight: 800;
-  color: var(--text-soft);
+  color: #2D2D2D;
 }
 
 .options {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.optionBtn {
+  background: #FFF8E1;
+  border: 3px solid #FFD93D;
+  border-radius: 16px;
+  padding: 1rem;
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #2D2D2D;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.optionBtn:hover {
+  background: #FFD93D;
+  transform: translateY(-2px);
+}
+
+.gameOver {
+  padding: 2rem 0;
+}
+
+.gameOver h2 {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.6rem;
+  color: #2D2D2D;
+  margin-bottom: 0.5rem;
+}
+
+.gameOver p {
+  color: #6B6B6B;
   margin-bottom: 1.5rem;
 }
 
-.option {
-  background: #fff;
-  border: 3px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 1rem 1.5rem;
-  font-family: 'Cairo', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--text);
-  cursor: pointer;
-  transition: all 0.2s var(--smooth);
-}
-
-.option:hover:not(:disabled) {
-  border-color: var(--sunshine);
-  transform: translateY(-3px);
-}
-
-.option.correct {
-  border-color: var(--mint);
-  background: #f0fdf4;
-  box-shadow: var(--glow-mint);
-  color: var(--text);
-}
-
-.option.wrong {
-  border-color: var(--coral);
-  background: #fef2f2;
-  color: var(--text);
-}
-
-.status {
-  margin-top: 1rem;
-}
-
-.success {
-  color: var(--mint);
-  font-weight: 800;
-  animation: pulse 0.6s ease-in-out;
-}
-
-.failure {
-  color: var(--coral);
-  font-weight: 800;
-  animation: pulse 0.6s ease-in-out;
-}
-
-.nextBtn {
-  margin-top: 1rem;
-}
-
-.nextBtn button {
-  background: linear-gradient(135deg, var(--sky), var(--sky));
+.btn {
+  background: #FF6B6B;
   color: #fff;
   border: none;
   padding: 0.75rem 2rem;
   border-radius: 16px;
   font-family: 'Cairo', sans-serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 800;
   cursor: pointer;
-  transition: transform 0.2s var(--smooth);
 }
 
-.nextBtn button:hover {
+.btn:hover {
   transform: scale(1.05);
 }
 
@@ -182,90 +133,7 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.resultOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(45, 45, 45, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1001;
-  backdrop-filter: blur(10px);
-}
-
-.resultCard {
-  background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
-  border-radius: 28px;
-  padding: 2.5rem;
-  max-width: 480px;
-  width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  text-align: center;
-  animation: slideUp 0.5s var(--smooth);
-}
-
-.celebration {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.resultTitle {
-  font-family: 'Cairo', sans-serif;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 0.5rem;
-}
-
-.resultText {
-  color: var(--text-soft);
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.resultActions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.closeBtn {
-  background: var(--sunshine);
-  color: var(--text);
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 16px;
-  font-family: 'Cairo', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: transform 0.2s var(--smooth);
-}
-
-.closeBtn:hover {
-  transform: scale(1.05);
-}
-
 @media (max-width: 480px) {
-  .card {
-    padding: 1.5rem;
-  }
-
-  .equation {
-    font-size: 0.9rem;
-  }
-
-  .symbol {
-    font-size: 1.8rem;
-  }
-
-  .option {
-    font-size: 1rem;
-    padding: 0.75rem;
-  }
+  .options { grid-template-columns: 1fr; }
+  .questionText { font-size: 1.5rem; }
 }

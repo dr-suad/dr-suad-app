@@ -97,7 +97,7 @@ export default function AdventureGame({ onClose, onComplete }) {
         <div className={styles.status}>
           {(selected !== null) && (
             <span className={`${styles.statusText} ${selected === STORY[station].correct ? styles.correct : styles.wrong} `}>
-              {selected === STORY[station].correct ? 'إجابة صحيحة! ⭐' : 'إجابة incorrect، حاول مرة أخرى 😅'}
+              {selected === STORY[station].correct ? 'إجابة صحيحة! ⭐' : 'إجابة خاطئة، حاول مرة أخرى 😅'}
             </span>
           )}
         </div>
