@@ -1,28 +1,27 @@
 import { motion } from 'framer-motion';
+import FloatingShapes from '../components/FloatingShapes.jsx';
+import GlowButton from '../components/GlowButton.jsx';
+import styles from './Hero.module.css';
 
-export default function Hero() {
+export default function Hero({ onExplore }) {
   return (
-    <section className="hero">
-      <div className="hero-content">
-        <div className="grade-badges">
-          <span className="badge" style={{ background: '#FF6B6B' }}>١</span>
-          <span className="badge" style={{ background: '#FFD93D' }}>٢</span>
-          <span className="badge" style={{ background: '#6BCB77' }}>٣</span>
-          <span className="badge" style={{ background: '#4D96FF' }}>٤</span>
-        </div>
+    <section className={styles.hero}>
+      <FloatingShapes />
+      <div className={styles.heroContent}>
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="hero-title"
+          className={styles.heroTitle}
         >
-          أهلاً بكم في عالم الرياضيات الممتع
+          أهلاً بكم في عالم<br />
+          <span className={styles.heroHighlight}>الرياضيات الممتع</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="hero-subtitle"
+          className={styles.heroText}
         >
           تدرّب، العب، واجمع النجوم مع د. سعاد
         </motion.p>
@@ -30,17 +29,12 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="hero-cta"
+          className={styles.heroCta}
         >
-          <a href="#/classes" className="btn-glow primary">
+          <GlowButton variant="mint" onClick={onExplore}>
             استكشف الصفوف
-          </a>
+          </GlowButton>
         </motion.div>
-      </div>
-      <div className="hero-shapes">
-        <div className="shape shape-1"></div>
-        <div className="shape shape-2"></div>
-        <div className="shape shape-3"></div>
       </div>
     </section>
   );

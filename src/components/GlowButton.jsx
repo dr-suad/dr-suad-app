@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import styles from './GlowButton.module.css';
 
 export default function GlowButton({ children, variant = 'primary', onClick, className }) {
   const variants = {
@@ -32,15 +33,20 @@ export default function GlowButton({ children, variant = 'primary', onClick, cla
       glow: 'var(--glow-sky)',
       text: '#fff',
     },
+    mint: {
+      bg: 'var(--mint)',
+      glow: 'var(--glow-mint)',
+      text: '#fff',
+    },
   };
 
-  const style = variants[variant];
+  const style = variants[variant] || variants.primary;
 
   return (
     <motion.button
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className={`glow-btn ${variant} ${className || ''}`}
+      className={`${styles.glowBtn} ${styles[variant]} ${className || ''}`}
       onClick={onClick}
       style={{
         background: style.bg,

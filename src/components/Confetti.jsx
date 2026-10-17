@@ -1,14 +1,17 @@
 import { motion } from 'framer-motion';
+import styles from './Confetti.module.css';
 
-export default function Confetti({ count = 50 }) {
+export default function Confetti({ active = false, count = 50 }) {
+  if (!active) return null;
+
   const colors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#B983FF', '#FF9F68'];
 
   return (
-    <div className="confetti-container">
+    <div className={styles.confettiContainer}>
       {Array.from({ length: count }).map((_, i) => (
         <motion.div
           key={i}
-          className="confetti-piece"
+          className={styles.confettiPiece}
           style={{
             left: `${Math.random() * 100}%`,
             backgroundColor: colors[i % colors.length],

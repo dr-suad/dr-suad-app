@@ -1,11 +1,12 @@
-import SectionTitle from '../components/SectionTitle';
+import SectionTitle from '../components/SectionTitle.jsx';
+import styles from '../App.module.css';
 
 export default function Plans() {
   return (
     <section className="plans-section" id="plans">
       <div className="container">
         <SectionTitle title="الخطط الفصلية" />
-        <div className="plans-grid">
+        <div className={styles.plansGrid}>
           {[
             {
               title: 'خطة الصف الأول — الفصل الدراسي الأول',
@@ -24,10 +25,10 @@ export default function Plans() {
               summary: 'أعداد، كسور، محيط ومساحة، تنظيم البيانات.',
             },
           ].map((plan, i) => (
-            <div key={i} className="plan-card" style={{ borderTop: `6px solid var(--mint)` }}>
+            <div key={i} className={styles.planCard} style={{ borderTop: `6px solid var(--mint)` }}>
               <h3>{plan.title}</h3>
-              <p className="plan-summary">{plan.summary}</p>
-              <button className="soon-btn">عرض الخطة</button>
+              <p className={styles.planSummary}>{plan.summary}</p>
+              <button className={styles.soonBtn}>عرض الخطة</button>
             </div>
           ))}
         </div>

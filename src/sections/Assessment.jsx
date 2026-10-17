@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import SectionTitle from '../components/SectionTitle';
-import GlowButton from '../components/GlowButton';
+import SectionTitle from '../components/SectionTitle.jsx';
+import GlowButton from '../components/GlowButton.jsx';
+import styles from '../App.module.css';
 
 const QUESTIONS = [
   { id: 1, text: 'كم هو ٣ + ٤؟', answer: '٧', options: ['٥', '٦', '٧', '٨'] },
@@ -54,10 +55,10 @@ export default function Assessment() {
 
   if (step === 'select') {
     return (
-      <section className="assessment-section" id="assessment">
+      <section className={styles.assessmentSection} id="assessment">
         <div className="container">
           <SectionTitle title="التقييم الحقيقي" />
-          <div className="class-select">
+          <div className={styles.classSelect}>
             {[1, 2, 3, 4].map((id) => (
               <GlowButton
                 key={id}
@@ -76,15 +77,15 @@ export default function Assessment() {
   if (step === 'question') {
     const q = QUESTIONS[currentQ];
     return (
-      <section className="assessment-section" id="assessment">
+      <section className={styles.assessmentSection} id="assessment">
         <div className="container">
           <SectionTitle title="سؤال من ٥" />
-          <div className="question-card">
-            <div className="progress">
+          <div className={styles.questionCard}>
+            <div className={styles.progress}>
               <span>{currentQ + 1} من {QUESTIONS.length}</span>
-              <div className="progress-bar">
+              <div className={styles.progressBar}>
                 <div
-                  className="progress-fill"
+                  className={styles.progressFill}
                   style={{ width: `${((currentQ + 1) / QUESTIONS.length) * 100}%` }}
                 />
               </div>
@@ -92,15 +93,15 @@ export default function Assessment() {
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="question-text"
+              className={styles.questionText}
             >
               {q.text}
             </motion.div>
-            <div className="options">
+            <div className={styles.options}>
               {q.options.map((opt) => (
                 <button
                   key={opt}
-                  className={`option ${selected ? (selected === opt ? 'selected' : '') : ''} ${showAnswer ? (opt === q.answer ? 'correct' : selected === opt ? 'wrong' : '') : ''}`}
+                  className={`${styles.option} ${selected ? (selected === opt ? styles.selected : '') : ''} ${showAnswer ? (opt === q.answer ? styles.correct : selected === opt ? styles.wrong : '') : ''}`}
                   onClick={() => handleAnswer(opt)}
                   disabled={showAnswer}
                 >
@@ -109,11 +110,11 @@ export default function Assessment() {
               ))}
             </div>
             {showAnswer && (
-              <div className="answer-feedback">
+              <div className={styles.answerFeedback}>
                 {selected === q.answer ? 'إجابة صحيحة! 🎉' : `الإجابة الصحيحة هي: ${q.answer}`}
               </div>
             )}
-            <div className="question-actions">
+            <div className={styles.questionActions}>
               <GlowButton variant="sky" onClick={nextQuestion} disabled={!showAnswer}>
                 {showAnswer ? 'السؤال التالي' : 'اختر إجابة'}
               </GlowButton>
@@ -125,17 +126,17 @@ export default function Assessment() {
   }
 
   return (
-    <section className="assessment-section" id="assessment">
+    <section className={styles.assessmentSection} id="assessment">
       <div className="container">
         <SectionTitle title="النتيجة النهائية" />
-        <div className="result-card">
-          <div className="score">
+        <div className={styles.resultCard}>
+          <div className={styles.score}>
             {score} من {QUESTIONS.length}
           </div>
-          <p className="result-message">
+          <p className={styles.resultMessage}>
             {score >= 4 ? 'ممتاز! أنت بطل الرياضيات 👑' : score >= 2 ? 'جيد جداً، قليل من التدريب ويصبح ممتازاً 🌟' : 'بداية جميلة، تابع التدريب وستتقدم 🌱'}
           </p>
-          <div className="result-actions">
+          <div className={styles.resultActions}>
             <GlowButton variant="mint" onClick={restart}>
               إعادة التقييم
             </GlowButton>
