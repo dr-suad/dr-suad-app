@@ -8,9 +8,46 @@
   cursor: pointer;
   transition: all 0.3s var(--smooth);
   outline: none;
+  color: #fff;
+  box-shadow: var(--glow-primary);
 }
 
 .glow-btn:focus-visible {
   outline: 3px solid var(--coral);
   outline-offset: 2px;
+}
+
+.sunshine {
+  background: var(--sunshine);
+  box-shadow: var(--glow-sun);
+}
+
+.sky {
+  background: var(--sky);
+  box-shadow: var(--glow-sky);
+}
+
+.lavender {
+  background: var(--lavender);
+  box-shadow: var(--glow-lav);
+}
+
+.peach {
+  background: var(--peach);
+  box-shadow: var(--glow-peach);
+}
+
+.mint {
+  background: var(--mint);
+  box-shadow: var(--glow-mint);
+}
+
+.primary {
+  background: var(--mint);
+  box-shadow: var(--glow-mint);
+}
+
+.coral {
+  background: var(--coral);
+  box-shadow: var(--glow-coral);
 }

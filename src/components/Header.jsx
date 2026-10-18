@@ -1,9 +1,28 @@
+import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 import styles from './Header.module.css';
 import { useSound } from '../hooks/useSound.js';
+import { useXP } from '../hooks/useXP.js';
+import { playLevelUp } from '../utils/sounds.js';
 import ParentReport from './ParentReport.jsx';
+import Leaderboard from './Leaderboard.jsx';
 
 export default function Header({ stars, dark, onThemeToggle }) {
   const { muted, toggleMute, play } = useSound();
+  const { xp, level, progress, leveledUp, clearLevelUp } = useXP();
+  const prevLevel = useRef(level);
+
+  useEffect(() => {
+    if (leveledUp) {
+      playLevelUp();
+      const t = setTimeout(clearLevelUp, 3000);
+      return () => clearTimeout(t);
+    }
+  }, [leveledUp, clearLevelUp]);
+
+  useEffect(() => {
+    prevLevel.current = level;
+  }, [level]);
 
   return (
     <header className={styles.header}>
@@ -22,6 +41,7 @@ export default function Header({ stars, dark, onThemeToggle }) {
           <button className={styles.themeToggle} aria-label="تبديل الوضع الليلي" onClick={onThemeToggle}>
             {dark ? '☀️' : '🌙'}
           </button>
+          <Leaderboard />
           <ParentReport />
           <button className={styles.hamburger} aria-label="فتح القائمة الرئيسية">
             <span></span>
@@ -30,6 +50,29 @@ export default function Header({ stars, dark, onThemeToggle }) {
           </button>
         </div>
       </div>
+      <div className={styles.xpRow}>
+        <span className={styles.xpLabel}>المستوى {level} — {xp} XP</span>
+        <div className={styles.xpTrack}>
+          <motion.div
+            className={styles.xpFill}
+            animate={{ width: `${progress.percent}%` }}
+            transition={{ type: 'spring', damping: 22 }}
+          />
+        </div>
+        <span className={styles.xpNext}>{progress.current}/{progress.total}</span>
+      </div>
+      <AnimatePresence>
+        {leveledUp && (
+          <motion.div
+            className={styles.levelUpBanner}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+          >
+            🎉 مبروك! وصلت المستوى {level}! 🎉
+          </motion.div>
+        )}
+      </AnimatePresence>
       <nav className={styles.nav}>
         <ul className={styles.navList}>
           <li><a className={styles.navLink} href="#/home">الرئيسية</a></li>

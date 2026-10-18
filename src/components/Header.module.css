@@ -98,6 +98,52 @@
   background: var(--bg-soft);
 }
 
+.xpRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.xpLabel {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.xpTrack {
+  flex: 1;
+  height: 10px;
+  background: var(--bg-soft);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.xpFill {
+  height: 100%;
+  background: linear-gradient(135deg, #FF6B6B, #FFD93D);
+  border-radius: 5px;
+}
+
+.xpNext {
+  font-size: 0.75rem;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+.levelUpBanner {
+  text-align: center;
+  background: linear-gradient(135deg, #6BCB77, #FFD93D);
+  color: #2D2D2D;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  padding: 8px;
+}
+
 /* Nav */
 .nav {
   display: none;

@@ -1,0 +1,100 @@
+.section {
+  padding: 40px 0;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.card {
+  background: linear-gradient(135deg, #FFE8CC, #FFF6E5);
+  border: 3px solid var(--sunshine);
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: var(--glow-sun);
+  text-align: center;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge {
+  background: var(--sunshine);
+  color: #2D2D2D;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.countdown {
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-soft);
+}
+
+.title {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+  text-align: right;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.progressBar {
+  flex: 1;
+  height: 12px;
+  background: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(135deg, #FF6B6B, #FFD93D);
+  border-radius: 6px;
+}
+
+.count {
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  min-width: 40px;
+}
+
+.done {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  color: var(--mint);
+}
+
+.hint {
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}

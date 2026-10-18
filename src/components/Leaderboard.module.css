@@ -1,0 +1,147 @@
+.triggerBtn {
+  background: var(--bg-soft);
+  border: 2px solid var(--sunshine);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.triggerBtn:hover {
+  background: var(--sunshine);
+  color: #2D2D2D;
+  box-shadow: var(--glow-sun);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(45, 45, 45, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  background: #fff;
+  border-radius: 24px;
+  padding: 1.5rem;
+  max-width: 520px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.closeBtn {
+  background: var(--text-soft);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: var(--coral);
+}
+
+.myRank {
+  text-align: center;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--coral);
+  background: var(--bg-soft);
+  padding: 10px;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+}
+
+.table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 1rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 50px 1fr 60px 50px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--bg-soft);
+  font-size: 0.95rem;
+}
+
+.headRow {
+  background: transparent;
+  font-weight: 800;
+  color: var(--text-soft);
+  font-size: 0.8rem;
+}
+
+.meRow {
+  background: linear-gradient(135deg, #FFE8CC, #FFF6E5);
+  border: 2px solid var(--sunshine);
+  font-weight: 800;
+}
+
+.rank {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.name {
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.xp {
+  font-weight: 800;
+  color: var(--sky);
+  text-align: center;
+}
+
+.stars {
+  text-align: center;
+}
+
+.note {
+  text-align: center;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 40px 1fr 50px 40px;
+    font-size: 0.85rem;
+  }
+}

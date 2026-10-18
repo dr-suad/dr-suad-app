@@ -1,5 +1,33 @@
 .app {
   min-height: 100vh;
+
+/* Games grade filters */
+.gradeButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.gradeTitle {
+  font-family: 'Cairo', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 16px;
+  text-align: right;
+}
+
+.gameSection {
+  margin-top: 20px;
+}
+
+/* ensure grade buttons inherit pointer */
+.glow-btn.primary {
+  box-shadow: var(--glow-mint);
+}
+
   display: flex;
   flex-direction: column;
 }

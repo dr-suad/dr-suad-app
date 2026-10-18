@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
-import { playSuccess, playError, playClick, playCelebration } from '../utils/sounds';
+import { playSuccess, playError, playClick, playCelebration, playLevelUp, playBadge } from '../utils/sounds';
 
 const SOUNDS = {
   success: playSuccess,
   error: playError,
   click: playClick,
   celebration: playCelebration,
+  levelup: playLevelUp,
+  badge: playBadge,
 };
 
 export function useSound() {
