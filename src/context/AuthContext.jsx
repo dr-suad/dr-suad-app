@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
+import { findClassByNameOrCode } from '../lib/adminUtils.js';
 
 const AuthContext = createContext(null);
 
@@ -188,14 +189,16 @@ export function AuthProvider({ children }) {
 
   const setClassCode = useCallback(async (code) => {
     if (!user) return { error: new Error('No user') };
-    const { data: classData, error: classError } = await supabase
-      .from('classes')
-      .select('id')
-      .eq('class_code', code)
-      .maybeSingle();
-    if (classError || !classData) {
-      return { error: classError || new Error('كود الصف غير صحيح') };
+    const cleanCode = (code || '').trim().toUpperCase();
+    if (!cleanCode) return { error: new Error('يرجى إدخال كود الصف') };
+
+    // البحث في class_code / code / name بالترتيب حسب توافر العمود
+    const { classData, error: findErr } = await findClassByNameOrCode(cleanCode);
+    if (findErr) return { error: findErr };
+    if (!classData) {
+      return { error: new Error('كود الصف غير صحيح — تأكد من الكود لدى معلمك') };
     }
+
     const { data, error } = await supabase
       .from('profiles')
       .update({ class_id: classData.id })

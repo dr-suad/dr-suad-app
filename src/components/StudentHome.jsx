@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx';
 export default function StudentHome() {
   const { user, profile, setClassCode, signOut } = useAuth();
   const [showCodeInput, setShowCodeInput] = useState(false);
-  const [classCode, setClassCodeInput] = useState('');
+  const [classCodeInput, setClassCodeInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -51,10 +51,10 @@ export default function StudentHome() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">مرحباً يا بطل! 🧒</h2>
           <p className="text-gray-600 mb-6">أنت تدخل كزائر. يرجى إدخال كود الصف الذي أعطاه لك معلمك للانضمام.</p>
           <form onSubmit={handleJoinClass} className="space-y-4">
-            <input type="text" value={classCode} onChange={(e) => setClassCodeInput(e.target.value.toUpperCase())}
+            <input type="text" value={classCodeInput} onChange={(e) => setClassCodeInput(e.target.value.toUpperCase())}
               placeholder="CLASS-XXXX" required maxLength="10"
               className="w-full px-4 py-2 border border-gray-300 rounded uppercase focus:ring-2 focus:ring-sunshine-500 outline-none" />
-            <button type="submit" disabled={loading || !classCode}
+            <button type="submit" disabled={loading || !classCodeInput}
               className="w-full px-4 py-2 bg-sunshine text-[#2D2D2D] font-bold rounded disabled:opacity-50">
               {loading ? 'جاري الحفظ...' : 'احفظ الكود'}
             </button>
@@ -76,10 +76,10 @@ export default function StudentHome() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">مرحباً يا بطل! 🧒</h2>
           <p className="text-gray-600 mb-6">لم يتم ربطك بصف بعد. يرجى إدخال كود الصف الذي أعطاه لك معلمك.</p>
           <form onSubmit={handleJoinClass} className="space-y-4">
-            <input type="text" value={classCode} onChange={(e) => setClassCodeInput(e.target.value.toUpperCase())}
+            <input type="text" value={classCodeInput} onChange={(e) => setClassCodeInput(e.target.value.toUpperCase())}
               placeholder="GAZA-4A" required maxLength="10"
               className="w-full px-4 py-2 border border-gray-300 rounded uppercase focus:ring-2 focus:ring-sunshine-500 outline-none" />
-            <button type="submit" disabled={loading || !classCode}
+            <button type="submit" disabled={loading || !classCodeInput}
               className="w-full px-4 py-2 bg-sunshine text-[#2D2D2D] font-bold rounded disabled:opacity-50">
               {loading ? 'جاري الربط...' : 'انضم إلى صفك'}
             </button>

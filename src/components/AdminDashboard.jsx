@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
 import { useAuth } from '../context/AuthContext.jsx';
-import { generateSchoolCode, generateInviteCode, generateClassCode } from '../lib/adminUtils.js';
+import { generateSchoolCode, generateInviteCode, generateClassCode, createClassWithCode, extractClassCode } from '../lib/adminUtils.js';
 
 const getSupabaseUsersUrl = () => {
   const supaUrl = import.meta.env.VITE_SUPABASE_URL || '';
@@ -210,34 +210,21 @@ export default function AdminDashboard() {
         if (!selectedSchoolId) throw new Error('يرجى اختيار المدرسة أولاً');
         const className = `صف جديد`;
         classCode = generateClassCode(className);
-        const { data: newClass, error: classErr } = await supabase
-          .from('classes')
-          .insert([{ name: className, school_id: selectedSchoolId, class_code: classCode }])
-          .select()
-          .maybeSingle();
-        if (classErr) {
-          if (classErr.message?.includes('class_code')) {
-            const { data: newClass2, error: classErr2 } = await supabase
-              .from('classes')
-              .insert([{ name: className, school_id: selectedSchoolId }])
-              .select()
-              .maybeSingle();
-            if (classErr2) throw classErr2;
-            classId = newClass2.id;
-          } else {
-            throw classErr;
-          }
-        } else {
-          classId = newClass.id;
-        }
+        const { classData: newClass, error: classErr } = await createClassWithCode({
+          name: className,
+          schoolId: selectedSchoolId,
+          code: classCode,
+        });
+        if (classErr) throw classErr;
+        classId = newClass.id;
         setSelectedClassId(classId);
       } else {
         const { data: existingClass } = await supabase
           .from('classes')
-          .select('class_code')
+          .select('*')
           .eq('id', classId)
           .maybeSingle();
-        classCode = existingClass?.class_code || generateClassCode(classId);
+        classCode = extractClassCode(existingClass) || generateClassCode(classId);
         setStudentClassCode(classCode);
       }
 

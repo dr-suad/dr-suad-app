@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '../lib/supabaseClient.js';
 import { useAuth } from '../context/AuthContext.jsx';
 import GlowButton from './GlowButton.jsx';
-import { generateClassCode } from '../lib/adminUtils.js';
+import { generateClassCode, createClassWithCode, extractClassCode } from '../lib/adminUtils.js';
 import styles from './TeacherDashboard.module.css';
 
 export default function TeacherDashboard({ showLinkForm = null } = {}) {
@@ -128,37 +128,24 @@ export default function TeacherDashboard({ showLinkForm = null } = {}) {
       if (!classId) {
         const className = `صف ${profile?.full_name || 'المعلمة'}`;
         classCode = generateClassCode(className);
-        const { data: newClass, error: classErr } = await supabase
-          .from('classes')
-          .insert([{ name: className, teacher_id: user.id, class_code: classCode }])
-          .select()
-          .maybeSingle();
-        if (classErr) {
-          // إذا فشل لأن العمود class_code غير موجود، جرب بدونه
-          if (classErr.message?.includes('class_code')) {
-            const { data: newClass2, error: classErr2 } = await supabase
-              .from('classes')
-              .insert([{ name: className, teacher_id: user.id }])
-              .select()
-              .maybeSingle();
-            if (classErr2) throw classErr2;
-            classId = newClass2.id;
-          } else {
-            throw classErr;
-          }
-        } else {
-          classId = newClass.id;
-        }
+        const { classData: newClass, error: classErr } = await createClassWithCode({
+          name: className,
+          teacherId: user.id,
+          schoolId: profile?.school_id || null,
+          code: classCode,
+        });
+        if (classErr) throw classErr;
+        classId = newClass.id;
         setStudentClassId(classId);
         setStudentClassCode(classCode);
       } else {
         // جلب كود الصف الحالي إن وجد
         const { data: existingClass } = await supabase
           .from('classes')
-          .select('class_code')
+          .select('*')
           .eq('id', classId)
           .maybeSingle();
-        classCode = existingClass?.class_code || generateClassCode(classId);
+        classCode = extractClassCode(existingClass) || generateClassCode(classId);
         setStudentClassCode(classCode);
         setStudentClassId(classId);
       }
