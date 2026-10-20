@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import styles from './GlowButton.module.css';
 
-export default function GlowButton({ children, variant = 'primary', onClick, className }) {
+export default function GlowButton({ children, variant = 'primary', onClick, className, type = 'button', disabled = false }) {
   const variants = {
     primary: {
       bg: 'var(--mint)',
@@ -44,14 +44,18 @@ export default function GlowButton({ children, variant = 'primary', onClick, cla
 
   return (
     <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
+      whileHover={disabled ? {} : { scale: 1.05 }}
+      whileTap={disabled ? {} : { scale: 0.95 }}
+      type={type}
+      disabled={disabled}
       className={`${styles.glowBtn} ${styles[variant]} ${className || ''}`}
       onClick={onClick}
       style={{
         background: style.bg,
         color: style.text,
         boxShadow: style.glow,
+        opacity: disabled ? 0.6 : 1,
+        cursor: disabled ? 'not-allowed' : 'pointer',
       }}
     >
       {children}

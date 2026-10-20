@@ -1,0 +1,34 @@
+# ملفات يجب نقلها إلى الكمبيوتر الجديد
+# لا تنقل node_modules أو dist (سيُعاد إنشاؤهما تلقائياً)
+
+## إلزامي (أساسي)
+.env.local
+package.json
+package-lock.json
+vite.config.js
+index.html
+src/
+
+## توثيق وأدوات
+README-MIGRATION.md
+backup.sh
+FILES-TO-MOVE.txt
+docs-create-teacher-manually.md
+supabase_teacher_invites.sql
+
+## إعدادات إضافية (اختياري)
+.github/
+.gitignore
+
+## ملاحظات مهمة
+# - لا تنقل: node_modules/  (سيُنشأ بـ npm install)
+# - لا تنقل: dist/           (سيُنشأ بـ npm run build)
+# - لا تنقل: .git/           (مجلد Git — اختياري حسب حاجتك)
+# - المجلد public/ غير موجود في هذا المشروع حالياً
+# - تأكد من نقل .env.local يدوياً (محمي في .gitignore ولا يُرفع لـ GitHub)
+#
+# بعد النقل نفّذ داخل المجلد:
+#   npm install
+#   npm run dev
+# ثم افتح:
+#   http://localhost:5173/dr-suad-app/

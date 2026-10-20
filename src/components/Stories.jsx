@@ -286,10 +286,11 @@ export default function Stories({ showToast }) {
         <p className={styles.sectionDesc}>قصص ممتعة تجمع بين القراءة والحساب!</p>
         <div className={styles.grid}>
           {STORIES.map((story, i) => (
-            <motion.button
+            <motion.div
               key={story.id}
               className={styles.storyCard}
               onClick={() => open(story)}
+              style={{ cursor: 'pointer' }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
@@ -302,7 +303,7 @@ export default function Stories({ showToast }) {
               <span className={styles.cardBadge}>الصف {['الأول', 'الثاني', 'الثالث', 'الرابع'][story.classId - 1]}</span>
               {story.value && <span className={styles.cardValue}>{story.value}</span>}
               <GlowButton variant="lavender" className={styles.cardGlowBtn}>اقرأ القصة 📖</GlowButton>
-            </motion.button>
+            </motion.div>
           ))}
         </div>
       </div>

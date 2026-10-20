@@ -6,11 +6,17 @@ import { useXP } from '../hooks/useXP.js';
 import { playLevelUp } from '../utils/sounds.js';
 import ParentReport from './ParentReport.jsx';
 import Leaderboard from './Leaderboard.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 export default function Header({ stars, dark, onThemeToggle }) {
   const { muted, toggleMute, play } = useSound();
   const { xp, level, progress, leveledUp, clearLevelUp } = useXP();
+  const { user, profile, signOut } = useAuth();
   const prevLevel = useRef(level);
+
+  const handleLogout = async () => {
+    await signOut();
+  };
 
   useEffect(() => {
     if (leveledUp) {
@@ -41,6 +47,19 @@ export default function Header({ stars, dark, onThemeToggle }) {
           <button className={styles.themeToggle} aria-label="تبديل الوضع الليلي" onClick={onThemeToggle}>
             {dark ? '☀️' : '🌙'}
           </button>
+          {user && profile && (
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-700 font-medium">
+                {profile.name || profile.email}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1.5 bg-coral text-white text-sm font-bold rounded hover:bg-red-600 transition"
+              >
+                تسجيل الخروج
+              </button>
+            </div>
+          )}
           <Leaderboard />
           <ParentReport />
           <button className={styles.hamburger} aria-label="فتح القائمة الرئيسية">
