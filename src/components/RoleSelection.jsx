@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext.jsx';
 import GlowButton from './GlowButton.jsx';
-import FloatingShapes from './FloatingShapes.jsx';
 import AuthForm from './AuthForm.jsx';
 import styles from './RoleSelection.module.css';
 
@@ -83,7 +82,22 @@ export default function RoleSelection() {
 
   return (
     <div className={styles.page} dir="rtl">
-      <FloatingShapes />
+      <div className={styles.floatingShapesWrap}>
+        {['➕', '➖', '✖️', '➗', '🔢', '🔺', '🔵', '⭐'].map((emoji, i) => (
+          <motion.span
+            key={i}
+            className={styles.bgShape}
+            style={{
+              left: `${10 + i * 11}%`,
+              top: `${20 + (i % 3) * 20}%`,
+            }}
+            animate={{ y: [0, -20, 0] }}
+            transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+          >
+            {emoji}
+          </motion.span>
+        ))}
+      </div>
       <div className={styles.container}>
         <motion.div
           variants={heroVariants}
@@ -100,9 +114,9 @@ export default function RoleSelection() {
             ✨ مرحباً بك
           </motion.span>
           <motion.h1
-            variants={titleVariants}
-            initial="hidden"
-            animate="visible"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
             className={styles.title}
           >
             علم وتميز: عنوان التعليم في نابلس
@@ -111,9 +125,8 @@ export default function RoleSelection() {
           </motion.h1>
 
           <motion.div
-            variants={subtitleVariants}
-            initial="hidden"
-            animate="visible"
+            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
             className={styles.supervision}
           >
             <p>بإشراف</p>
@@ -134,14 +147,14 @@ export default function RoleSelection() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.1 }}
-                whileHover={{ y: -8, scale: 1.03 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setMode(role.id)}
                 className={`${styles.roleCard}${selected ? ` ${styles.roleCardSelected}` : ''}`}
                 style={{ borderTopColor: role.accent, color: role.accent }}
               >
                 <motion.span
-                  className={styles.roleIcon}
+                  className={`${styles.roleIcon} ${styles.pulseIcon}`}
                   animate={{ rotate: [0, -8, 8, 0], scale: [1, 1.1, 1] }}
                   transition={{
                     duration: 3,
