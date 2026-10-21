@@ -60,31 +60,65 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  margin-top: 20px;
-  font-family: 'Cairo', sans-serif;
-  line-height: 2;
-  font-weight: 800;
-  font-size: 1.4rem;
+  gap: 6px;
+  margin-top: 22px;
+  font-family: 'Cairo', 'Tajawal', sans-serif;
+  line-height: 1.9;
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(14px);
-  padding: 20px 28px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 22px 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 }
 
-.supervision p {
+/* شريط علوي متدرّج يميّز صندوق الإشراف */
+.supervision::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--mint), var(--sky), var(--lavender));
+}
+
+.supervision span {
   margin: 0;
   text-align: center;
   position: relative;
   z-index: 1;
-  background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+}
+
+.supervision .supervisionLabel {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #6b6b6b;
+  letter-spacing: 0.5px;
+}
+
+.supervision .supervisionName {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #b983ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+.supervision .supervisionRole {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2d2d2d;
+}
+
+.supervision .supervisionOrg {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #6b6b6b;
+  margin-top: 4px;
 }
 
 @keyframes shine {
@@ -289,4 +323,33 @@
   .roleIcon {
     font-size: 2.6rem;
   }
+}
+
+/* ===== فاصل "أو" + زر دخول كزائر ===== */
+.orRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 16px;
+}
+
+.orLine {
+  flex: 1;
+  height: 2px;
+  background: #ece7dc;
+}
+
+.orText {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #6b6b6b;
+  font-family: 'Cairo', sans-serif;
+}
+
+.guestNote {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #6b6b6b;
+  line-height: 1.7;
 }

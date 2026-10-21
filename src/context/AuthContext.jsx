@@ -1,14 +1,37 @@
-import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
 import { findClassByNameOrCode } from '../lib/adminUtils.js';
 
 const AuthContext = createContext(null);
 
+// بريد الإدارة المعتمد (يُستخدم لتحديد الدور عند تعذّر جلب الملف من قاعدة البيانات)
+const KNOWN_ADMIN_EMAILS = ['suadamal2001@gmail.com'];
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const initialized = useRef(false);
+
+  // يدمج الملف الجديد مع الحالة الحالية مع الحفاظ على class_id
+  // (لتفادي سباق بين ensureProfile و setClassCode)
+  const mergeProfile = useCallback((incoming) => {
+    if (!incoming) return incoming;
+    setProfile((prev) => {
+      if (!prev || prev.id !== incoming.id) return incoming;
+      if (!incoming.class_id && prev.class_id) return { ...incoming, class_id: prev.class_id };
+      return incoming;
+    });
+    return incoming;
+  }, []);
+
+  // تحديد الدور الافتراضي من بيانات المصادقة (بدون استعلام قاعدة بيانات)
+  const guessRole = useCallback((authUser, fallbackRole = 'student') => {
+    const email = (authUser?.email || '').toLowerCase();
+    if (authUser?.is_anonymous) return 'student';
+    if (KNOWN_ADMIN_EMAILS.includes(email)) return 'admin';
+    if (email.includes('teacher') || email.includes('mueallima')) return 'teacher';
+    return fallbackRole;
+  }, []);
 
   const ensureProfile = useCallback(async (authUser, fallbackRole = 'student') => {
     if (!authUser) return null;
@@ -21,15 +44,25 @@ export function AuthProvider({ children }) {
         .maybeSingle();
       if (fetchErr) {
         console.warn('Profile fetch:', fetchErr.message);
-        return null;
+        // ملف احتياطي حتى لا يعلّق التطبيق على شاشة التحميل
+        const fallback = {
+          id: authUser.id,
+          name: authUser.user_metadata?.name || (authUser.is_anonymous ? 'زائر' : 'مستخدم'),
+          role: guessRole(authUser, fallbackRole),
+          class_id: null,
+        };
+        mergeProfile(fallback);
+        return fallback;
       }
       const email = (authUser.email || existing?.email || '').toLowerCase();
 
       // 2) إذا كان صف موجود، نعود بدوره — مع ترقية تلقائية للبريد المعروف
       if (existing) {
         let targetRole = existing.role;
-        const KNOWN_ADMIN_EMAILS = ['suadamal2001@gmail.com'];
-        if (KNOWN_ADMIN_EMAILS.includes(email)) targetRole = 'admin';
+        // المستخدم المجهول (زائر) دائماً طالب — لا ترقية له
+        if (authUser.is_anonymous) {
+          targetRole = 'student';
+        } else if (KNOWN_ADMIN_EMAILS.includes(email)) targetRole = 'admin';
         else if (email.includes('teacher') || email.includes('mueallima')) targetRole = 'teacher';
         // إذا تم تمرير دور محدد من واجهة المستخدم وكان مختلفاً عن الدور المخزن، نستخدمه ونحدث Supabase
         else if (fallbackRole && fallbackRole !== existing.role) {
@@ -44,17 +77,19 @@ export function AuthProvider({ children }) {
             .select()
             .maybeSingle();
           const finalP = !upErr && upgraded ? upgraded : { ...existing, role: targetRole };
-          setProfile(finalP);
+          mergeProfile(finalP);
           return finalP;
         }
-        setProfile(existing);
+        mergeProfile(existing);
         return existing;
       }
 
       // 3) لا يوجد صف → تحديد الدور تلقائياً
       let autoRole = fallbackRole;
-      const KNOWN_ADMIN_EMAILS2 = ['suadamal2001@gmail.com'];
-      if (KNOWN_ADMIN_EMAILS2.includes(email)) {
+      if (authUser.is_anonymous) {
+        // الزائر المجهول طالب دائماً
+        autoRole = 'student';
+      } else if (KNOWN_ADMIN_EMAILS.includes(email)) {
         autoRole = 'admin';
       } else if (email.includes('teacher') || email.includes('mueallima')) {
         autoRole = 'teacher';
@@ -70,7 +105,7 @@ export function AuthProvider({ children }) {
       }
       const payload = {
         id: authUser.id,
-        name: authUser.user_metadata?.name || 'مستخدم',
+        name: authUser.user_metadata?.name || (authUser.is_anonymous ? 'زائر' : 'مستخدم'),
         role: autoRole,
       };
       const { data: created, error: insertErr } = await supabase
@@ -81,29 +116,43 @@ export function AuthProvider({ children }) {
       console.log('Upsert profile result:', created, insertErr);
       if (insertErr) {
         console.warn('Profile auto-create:', insertErr.message);
-        setProfile(payload);
+        mergeProfile(payload);
         return payload;
       }
       const finalProfile = created || payload;
-      setProfile(finalProfile);
+      mergeProfile(finalProfile);
       return finalProfile;
     } catch (err) {
       console.warn('ensureProfile:', err?.message || err);
-      return null;
+      // ملف احتياطي عند أي خطأ غير متوقع (RLS/شبكة) حتى لا يعلّق التطبيق
+      const fallback = {
+        id: authUser.id,
+        name: authUser.user_metadata?.name || (authUser.is_anonymous ? 'زائر' : 'مستخدم'),
+        role: guessRole(authUser, fallbackRole),
+        class_id: null,
+      };
+      mergeProfile(fallback);
+      return fallback;
     }
-  }, []);
+  }, [mergeProfile, guessRole]);
 
   useEffect(() => {
-    // منع التشغيل المتكرر
-    if (initialized.current) return;
-    initialized.current = true;
-
+    // ملاحظة: لا نستخدم حارس "initialized" هنا لأن React StrictMode
+    // يركّب المكوّن مرتين (mount → unmount → mount). الحارس كان يمنع
+    // إعادة الاشتراك في ثاني تركيب بينما كان الاشتراك الأول قد تم
+    // إلغاؤه في التنظيف، فيضيع حدث onAuthStateChange ولا تُحدَّث الحالة أبداً.
+    // الاشتراك هنا آمن للتكرار: كل تركيب ينشئ اشتراكه ويلغيه عند التنظيف.
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         if (session && session.user) {
           setUser(session.user);
-          // جلب أو إنشاء تلقائي — أول مستخدم يصبح admin (يصلح 406 لغياب الصف)
-          await ensureProfile(session.user);
+          // جلب أو إنشاء الملف تلقائياً — نؤجله خارج المعالج لتفادي
+          // الجمود (deadlock) عند استدعاء Supabase داخل onAuthStateChange
+          setTimeout(() => {
+            ensureProfile(session.user).catch((err) => {
+              console.warn('Profile auto-create:', err?.message || err);
+            });
+          }, 0);
         } else {
           setUser(null);
           setProfile(null);
@@ -125,7 +174,9 @@ export function AuthProvider({ children }) {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [ensureProfile]); // إزالة profile من dependencies لمنع الوميض
 
   const signIn = useCallback(async (email, password, role = 'student') => {
@@ -172,37 +223,60 @@ export function AuthProvider({ children }) {
     return { data, error: null };
   }, [ensureProfile]);
 
+  /**
+   * دخول كزائر — ينشئ حساباً مجهولاً (anonymous) بدور طالب.
+   * يُستخدم لتجربة سريعة بدون كود صف.
+   */
   const signInAnonymously = useCallback(async () => {
-    const { data, error } = await supabase.auth.signInAnonymously();
-    return { data, error };
-  }, []);
-
-  const signOut = useCallback(async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
+    // إذا كان المستخدم زائراً بالفعل (anonymous) نكتفي بتحديث ملفه
+    if (user?.is_anonymous) {
+      await ensureProfile(user, 'student');
+      return { data: { user }, error: null };
+    }
+    // مستخدم مسجّل الدخول: نخرج أولاً حتى نبدأ جلسة زائر نظيفة
+    if (user) {
+      await supabase.auth.signOut();
       setUser(null);
       setProfile(null);
-      initialized.current = false; // إعادة التعيين للسماح بإعادة التشغيل
     }
-    return { error };
-  }, []);
+    const { data, error } = await supabase.auth.signInAnonymously({
+      options: { data: { name: 'زائر' } },
+    });
+    if (error) return { data: null, error };
 
-  const setClassCode = useCallback(async (code) => {
-    if (!user) return { error: new Error('No user') };
+    // إنشاء ملف الطالب (دور student) — guest لا يرتبط بصف
+    if (data?.user) {
+      try {
+        await ensureProfile(data.user, 'student');
+      } catch (profileErr) {
+        console.warn('Guest profile creation skipped:', profileErr?.message || profileErr);
+      }
+    }
+    return { data, error: null };
+  }, [user, ensureProfile]);
+
+  const setClassCode = useCallback(async (code, targetUser, preResolvedClass) => {
+    const activeUser = targetUser || user;
+    if (!activeUser) return { error: new Error('No user') };
     const cleanCode = (code || '').trim().toUpperCase();
     if (!cleanCode) return { error: new Error('يرجى إدخال كود الصف') };
 
     // البحث في class_code / code / name بالترتيب حسب توافر العمود
-    const { classData, error: findErr } = await findClassByNameOrCode(cleanCode);
-    if (findErr) return { error: findErr };
+    // (يمكن تمرير classData جاهزاً لتفادي تكرار البحث)
+    let classData = preResolvedClass || null;
     if (!classData) {
-      return { error: new Error('كود الصف غير صحيح — تأكد من الكود لدى معلمك') };
+      const { classData: found, error: findErr } = await findClassByNameOrCode(cleanCode);
+      if (findErr) return { error: findErr };
+      if (!found) {
+        return { error: new Error('كود الصف غير صحيح — تأكد من الكود لدى معلمك') };
+      }
+      classData = found;
     }
 
     const { data, error } = await supabase
       .from('profiles')
       .update({ class_id: classData.id })
-      .eq('id', user.id)
+      .eq('id', activeUser.id)
       .select()
       .maybeSingle();
     if (error) return { error };
@@ -211,13 +285,64 @@ export function AuthProvider({ children }) {
     return { data, error: null };
   }, [user]);
 
+
+  /**
+   * joinClass(code) - يتحقق من الكود أولاً، ثم ينشئ حساباً مجهولاً (إن لزم)
+   * ويربط الحساب بالصف.
+   *
+   * مهم: التحقق من الكود يسبق إنشاء الجلسة حتى لا يُسجَّل الطالب
+   * كمجهول (زائر) عند إدخال كود خاطئ — لأن ذلك كان يُفتح واجهة الطفل
+   * ويُفقد رسالة الخطأ.
+   */
+  const joinClass = useCallback(async (code) => {
+    const cleanCode = (code || '').trim().toUpperCase();
+    if (!cleanCode) return { error: new Error('يرجى إدخال كود الصف') };
+
+    // 1) تحقق من صحة الكود قبل أي تسجيل دخول
+    const { classData, error: findErr } = await findClassByNameOrCode(cleanCode);
+    if (findErr) return { error: findErr };
+    if (!classData) {
+      return { error: new Error('كود الصف غير صحيح — تأكد من الكود لدى معلمك') };
+    }
+
+    // 2) إنشاء حساب مجهول فقط بعد نجاح التحقق
+    let activeUser = user;
+    if (!activeUser) {
+      const { data, error } = await supabase.auth.signInAnonymously({
+        options: { data: { name: 'زائر' } },
+      });
+      if (error) return { error };
+      activeUser = data?.user;
+      if (activeUser) {
+        try {
+          await ensureProfile(activeUser, 'student');
+        } catch (profileErr) {
+          console.warn('Guest profile creation skipped:', profileErr?.message || profileErr);
+        }
+      }
+    }
+
+    // 3) ربط الحساب بالصف
+    const { data, error } = await setClassCode(cleanCode, activeUser, classData);
+    if (error) return { error };
+    return { data, error: null };
+  }, [user, ensureProfile, setClassCode]);
+
+  const signOut = useCallback(async () => {
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      setUser(null);
+      setProfile(null);
+    }
+    return { error };
+  }, []);
+
   const forceSignOut = useCallback(async () => {
     await supabase.auth.signOut();
     localStorage.clear();
     setUser(null);
     setProfile(null);
     setLoading(false);
-    initialized.current = false;
   }, []);
 
   // جلب الملف الشخصي من Supabase وتحديث الحالة — يُستدعى بعد أي تحديث (ربط مدرسة، إلخ)
@@ -242,10 +367,15 @@ export function AuthProvider({ children }) {
     user,
     profile,
     loading,
+    // "وضع التجربة" = زائر مجهول لم ينضم لأي صف.
+    // الطالب الذي انضم بكود صف يصبح مجهولاً أيضاً (لأننا نستخدم
+    // signInAnonymously) لكن يجب ألا يظهر له شريط التجربة.
+    isGuest: !!user?.is_anonymous && !profile?.class_id,
     signIn,
     signUp,
     signOut,
     signInAnonymously,
+    joinClass,
     setClassCode,
     forceSignOut,
     refreshProfile,

@@ -33,7 +33,7 @@ const subtitleVariants = {
 };
 
 export default function RoleSelection() {
-  const { signInAnonymously } = useAuth();
+  const { signInAnonymously, joinClass } = useAuth();
   const [mode, setMode] = useState(null);
   const [classCode, setClassCode] = useState('');
   const [error, setError] = useState('');
@@ -43,13 +43,22 @@ export default function RoleSelection() {
     e.preventDefault();
     setSubmitting(true);
     setError('');
-    const { error: err } = await signInAnonymously();
+    const { error: err } = await joinClass(classCode);
     if (err) {
       setError(err.message);
       setSubmitting(false);
       return;
     }
-    localStorage.setItem('pending_class_code', classCode);
+    setSubmitting(false);
+  };
+
+  const handleGuestEntry = async () => {
+    setSubmitting(true);
+    setError('');
+    const { error: err } = await signInAnonymously();
+    if (err) {
+      setError(err.message);
+    }
     setSubmitting(false);
   };
 
@@ -129,11 +138,17 @@ export default function RoleSelection() {
             initial={{ opacity: 0, y: 20 }}
             className={styles.supervision}
           >
-            <p>بإشراف</p>
-            <p>الأستاذ جبران قادوس</p>
-            <p>ومشرفي المرحلة الأساسية و اللغة الإنجليزية</p>
-            <p>ومعلمي المرحلة الأساسية واللغة الانجليزية</p>
-            <p>في مديرية نابلس</p>
+            <span className={styles.supervisionLabel}>بإشراف</span>
+            <span className={styles.supervisionName}>الأستاذ جبران قادوس</span>
+            <span className={styles.supervisionRole}>
+              ومشرفي المرحلة الأساسية واللغة الإنجليزية
+            </span>
+            <span className={styles.supervisionRole}>
+              ومعلمي المرحلة الأساسية واللغة الإنجليزية
+            </span>
+            <span className={styles.supervisionOrg}>
+              في مديرية التربية والتعليم - نابلس
+            </span>
           </motion.div>
         </motion.div>
 
@@ -195,16 +210,17 @@ export default function RoleSelection() {
               className={styles.panel}
             >
               <div className={styles.studentCard}>
-                <h2 className={styles.studentTitle}>انضم إلى صفك 🧒</h2>
-                <p className={styles.studentSub}>اطلب كود الصف من معلمتك</p>
+                <h2 className={styles.studentTitle}>مرحباً يا بطل! 🧒</h2>
+                <p className={styles.studentSub}>
+                  {classCode ? 'اضغط انضم لربط حسابك بالصف' : 'لديك كود صف؟ أدخله، أو جرّب التطبيق كزائر'}
+                </p>
                 <form onSubmit={handleStudentJoin} className={styles.form}>
                   <div className={styles.field}>
-                    <label>كود الصف</label>
+                    <label>كود الصف (اختياري للزائر)</label>
                     <input
                       type="text"
                       value={classCode}
                       onChange={(e) => setClassCode(e.target.value.toUpperCase())}
-                      required
                       maxLength={10}
                       className={styles.input}
                       placeholder="GAZA-4A"
@@ -220,6 +236,24 @@ export default function RoleSelection() {
                   </GlowButton>
                   {error && <p className={styles.error}>{error}</p>}
                 </form>
+
+                <div className={styles.orRow}>
+                  <span className={styles.orLine} />
+                  <span className={styles.orText}>أو</span>
+                  <span className={styles.orLine} />
+                </div>
+
+                <GlowButton
+                  variant="lavender"
+                  onClick={handleGuestEntry}
+                  disabled={submitting}
+                  className={styles.fullBtn}
+                >
+                  🧒 دخول كزائر (تجربة سريعة)
+                </GlowButton>
+                <p className={styles.guestNote}>
+                  ادخل كزائر لتلعب وتتعلم فوراً بدون كود صف — لن تظهر نتائجك للمعلمة.
+                </p>
               </div>
             </motion.div>
           )}

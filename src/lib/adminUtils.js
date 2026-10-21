@@ -22,17 +22,37 @@ function isMissingColumn(error) {
 }
 
 // ذاكرة مؤقتة للمخطط: أعمدة معروفة بأنها غير موجودة — تمنع تكرار الطلبات الفاشلة
+// تُحفظ في sessionStorage حتى لا نعيد الاستعلام في كل تحميل للصفحة
+const SCHEMA_CACHE_KEY = 'dr_suad_classes_schema_v1';
 const missingColumns = new Set();
+const knownColumns = new Set();
+
+// تحميل المعرفة المحفوظة (الجلسة الحالية)
+try {
+  const saved = JSON.parse(sessionStorage.getItem(SCHEMA_CACHE_KEY) || '{}');
+  (saved.missing || []).forEach((c) => missingColumns.add(c));
+  (saved.present || []).forEach((c) => knownColumns.add(c));
+} catch {
+  // تجاهل أخطاء التخزين (وضع الخصوصية مثلاً)
+}
+
+function persistSchemaCache() {
+  try {
+    sessionStorage.setItem(
+      SCHEMA_CACHE_KEY,
+      JSON.stringify({
+        missing: Array.from(missingColumns),
+        present: Array.from(knownColumns),
+      })
+    );
+  } catch {
+    // غير حرج
+  }
+}
 
 /** هل نعلم مسبقاً أن العمود غير متاح؟ */
 function isKnownMissing(col) {
   return missingColumns.has(col);
-}
-
-/** هل نعلم مسبقاً أن العمود متاح؟ */
-const knownColumns = new Set();
-function isKnownPresent(col) {
-  return knownColumns.has(col);
 }
 
 function markColumn(col, present) {
@@ -43,6 +63,7 @@ function markColumn(col, present) {
     missingColumns.add(col);
     knownColumns.delete(col);
   }
+  persistSchemaCache();
 }
 
 /**
@@ -54,56 +75,62 @@ export async function findClassByNameOrCode(code) {
 
   // 1) محاولة أول: عمود class_code (إن كان موجوداً)
   if (!isKnownMissing('class_code')) {
-    const { data: byClassCode, error: err1 } = await supabase
+    const { data: codeRows, error: err1 } = await supabase
       .from('classes')
       .select('id, name, class_code')
       .eq('class_code', clean)
-      .maybeSingle();
+      .limit(1);
 
-    if (!err1 && byClassCode) return { classData: byClassCode, error: null, via: 'class_code' };
+    if (!err1 && codeRows && codeRows.length) {
+      markColumn('class_code', true);
+      return { classData: codeRows[0], error: null, via: 'class_code' };
+    }
     if (err1) {
-      if (isMissingColumn(err1)) {
-        markColumn('class_code', false);
-      } else {
+      if (!isMissingColumn(err1)) {
         return { classData: null, error: err1, via: null };
       }
-    } else if (isKnownPresent('class_code')) {
-      // العمود موجود لكن لا يوجد صف بهذا الكود → لا نكمل
-      return { classData: null, error: null, via: 'class_code' };
+      // العمود غير موجود → نكمل للبحث في الاسم
+      markColumn('class_code', false);
+    } else {
+      // الاستعلام نجح → العمود موجود. لكن قد تكون هناك صفوف قديمة
+      // تحمل الكود داخل الاسم فقط، لذا نكمل للبحث الاحتياطي.
+      markColumn('class_code', true);
     }
   }
 
   // 2) محاولة ثانية: عمود code (مخططات أخرى)
   if (!isKnownMissing('code')) {
-    const { data: byCode, error: err2 } = await supabase
+    const { data: legacyRows, error: err2 } = await supabase
       .from('classes')
-      .select('id, name, class_code')
+      .select('id, name')
       .eq('code', clean)
-      .maybeSingle();
+      .limit(1);
 
-    if (!err2 && byCode) return { classData: byCode, error: null, via: 'code' };
+    if (!err2 && legacyRows && legacyRows.length) {
+      markColumn('code', true);
+      return { classData: legacyRows[0], error: null, via: 'code' };
+    }
     if (err2) {
-      if (isMissingColumn(err2)) {
-        markColumn('code', false);
-      } else {
+      if (!isMissingColumn(err2)) {
         return { classData: null, error: err2, via: null };
       }
-    } else if (isKnownPresent('code')) {
-      return { classData: null, error: null, via: 'code' };
+      markColumn('code', false);
+    } else {
+      markColumn('code', true);
     }
   }
 
   // 3) حل احتياطي: الاسم نفسه يساوي الكود (select بدون class_code لتفادي الخطأ)
-  const { data: byName, error: err3 } = await supabase
+  const { data: nameRows, error: err3 } = await supabase
     .from('classes')
     .select('id, name')
     .eq('name', clean)
-    .maybeSingle();
+    .limit(1);
 
   if (err3) {
     if (!isMissingColumn(err3)) return { classData: null, error: err3, via: null };
-  } else if (byName) {
-    return { classData: byName, error: null, via: 'name' };
+  } else if (nameRows && nameRows.length) {
+    return { classData: nameRows[0], error: null, via: 'name' };
   }
 
   // 4) حل احتياطي: الكود مدمج داخل الاسم بصيغة "اسم الصف [CODE]"
@@ -157,6 +184,19 @@ export async function createClassWithCode({ name, teacherId = null, schoolId = n
 
   if (fbErr) return { classData: null, error: fbErr, via: null };
   return { classData: fb, error: null, via: 'name' };
+}
+
+/**
+ * إعادة ضبط ذاكرة المخطط (تُستخدم في الاختبارات فقط)
+ */
+export function resetSchemaCache() {
+  missingColumns.clear();
+  knownColumns.clear();
+  try {
+    sessionStorage.removeItem(SCHEMA_CACHE_KEY);
+  } catch {
+    // غير حرج
+  }
 }
 
 /**

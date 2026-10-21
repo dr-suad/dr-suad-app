@@ -34,8 +34,8 @@ export default function Header({ stars, dark, onThemeToggle }) {
     <header className={styles.header}>
       <div className={styles.headerInner}>
         <div className={styles.brand}>
-          <span className={styles.brandEmoji}>👩🏫</span>
-          <h1>د. سعاد قريني</h1>
+          <span className={styles.brandEmoji}>🏫</span>
+          <h1>منصة نابلس التعليمية</h1>
         </div>
         <div className={styles.headerActions}>
           <div className={styles.starsCounter}>
@@ -48,14 +48,11 @@ export default function Header({ stars, dark, onThemeToggle }) {
             {dark ? '☀️' : '🌙'}
           </button>
           {user && profile && (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-700 font-medium">
+            <div className={styles.userBox}>
+              <span className={styles.userName}>
                 {profile.name || profile.email}
               </span>
-              <button
-                onClick={handleLogout}
-                className="px-3 py-1.5 bg-coral text-white text-sm font-bold rounded hover:bg-red-600 transition"
-              >
+              <button onClick={handleLogout} className={styles.logoutBtn}>
                 تسجيل الخروج
               </button>
             </div>

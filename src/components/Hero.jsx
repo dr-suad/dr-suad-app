@@ -34,7 +34,7 @@ export default function Hero({ onExplore }) {
           transition={{ duration: 0.6, delay: 0.2 }}
           className={styles.heroText}
         >
-          تدرّب، العب، واجمع النجوم مع د. سعاد
+          تدرّب، العب، واجمع النجوم في منصتنا التعليمية
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -14,4 +14,14 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  // JSX بالـ automatic runtime (لا حاجة لاستيراد React يدوياً)
+  esbuild: {
+    jsx: 'automatic',
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.js'],
+    include: ['src/**/*.test.{js,jsx}'],
+  },
 })

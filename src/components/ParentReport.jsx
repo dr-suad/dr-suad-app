@@ -89,7 +89,7 @@ export default function ParentReport() {
               </ul>
             </div>
 
-            <p className={styles.footer}>تم إنشاء هذا التقرير بواسطة نظام د. سعاد التعليمي</p>
+            <p className={styles.footer}>تم إنشاء هذا التقرير بواسطة منصة مديرية التربية والتعليم - نابلس</p>
           </div>
         </div>
       )}

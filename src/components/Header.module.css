@@ -186,3 +186,71 @@
   .nav { display: block; }
   .navList { flex-direction: row; justify-content: center; gap: 0.5rem; padding-block: 0.75rem; }
 }
+/* ===== صندوق المستخدم وزر الخروج ===== */
+.userBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userName {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #4b5563;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logoutBtn {
+  background: var(--coral, #ef4444);
+  color: #fff;
+  font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 7px 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* ===== تكيّف الهيدر مع الشاشات الصغيرة ===== */
+@media (max-width: 768px) {
+  .headerInner {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
+
+  .brand {
+    font-size: 1.1rem;
+    min-width: 0;
+  }
+
+  .brand h1 {
+    font-size: inherit;
+    white-space: nowrap;
+  }
+
+  .headerActions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .starsCounter {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .userName {
+    display: none;
+  }
+}

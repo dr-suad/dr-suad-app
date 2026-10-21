@@ -4,7 +4,10 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className="container">
-        <p>© د. سعاد قريني — صُنع بـ ❤️ للطلبة وفق المنهاج الفلسطيني</p>
+        <p className={styles.footerText}>
+          © 2026 مديرية التربية والتعليم - نابلس. جميع الحقوق محفوظة.
+        </p>
+        <p className={styles.footerCredit}>بإشراف الأستاذ جبران قادوس</p>
       </div>
     </footer>
   );

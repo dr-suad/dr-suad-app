@@ -1,112 +1,149 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabaseClient.js';
+import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext.jsx';
+import styles from './StudentHome.module.css';
 
+/**
+ * شاشة انضمام الطالب:
+ *  - "لدي كود صف"  -> ربط الحساب بالصف عبر الكود
+ *  - "دخول كزائر" -> تجربة سريعة بدون كود صف
+ */
 export default function StudentHome() {
-  const { user, profile, setClassCode, signOut } = useAuth();
-  const [showCodeInput, setShowCodeInput] = useState(false);
+  const { profile, joinClass, signInAnonymously, signOut, isGuest } = useAuth();
+  const [mode, setMode] = useState(null); // 'code' | 'guest'
   const [classCodeInput, setClassCodeInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // إن وصلنا بتTMP كود معلّق من شاشة اختيار الدور، نفتح نموذج الكود مباشرة
   useEffect(() => {
-    // إذا كان هناك كود صف معلق من دور الاختيار
     const pending = localStorage.getItem('pending_class_code');
-    if (pending && !profile?.class_id) {
-      setClassCodeInput(pending);
-      setShowCodeInput(true);
+    if (pending) {
+      setClassCodeInput(pending.toUpperCase());
+      setMode('code');
       localStorage.removeItem('pending_class_code');
     }
-  }, [profile?.class_id]);
+  }, []);
 
   const handleJoinClass = async (e) => {
     e.preventDefault();
+    const code = classCodeInput.trim().toUpperCase();
+    if (!code) {
+      setError('يرجى إدخال كود الصف');
+      return;
+    }
     setLoading(true);
     setError('');
     try {
-      // إذا لم يكن هناك مستخدم مسجل، نخزن الكود محلياً لاستخدامه عند تسجيل الدخول
-      if (!user) {
-        localStorage.setItem('pending_class_code', classCodeInput.toUpperCase());
-        setShowCodeInput(false);
-        return;
-      }
-      const { error: err } = await setClassCode(classCodeInput);
+      const { error: err } = await joinClass(code);
       if (err) throw err;
-      setShowCodeInput(false);
+      setMode(null);
     } catch (err) {
-      setError(err.message);
+      setError(err?.message || 'تعذر الانضمام للصف');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogout = async () => { await signOut(); };
+  const handleGuest = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const { error: err } = await signInAnonymously();
+      if (err) throw err;
+    } catch (err) {
+      setError(err?.message || 'تعذر الدخول كزائر');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // إذا لم يكن هناك ملف شخصي بعد، ننتظر
-  if (!user && !profile) {
-    // زائر بالكامل — نعرض شاشة إدخال الكود مباشرة
-    return (
-      <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center justify-center">
-        <div className="bg-white p-8 rounded-xl shadow border border-gray-100 text-center max-w-md w-full">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">مرحباً يا بطل! 🧒</h2>
-          <p className="text-gray-600 mb-6">أنت تدخل كزائر. يرجى إدخال كود الصف الذي أعطاه لك معلمك للانضمام.</p>
-          <form onSubmit={handleJoinClass} className="space-y-4">
-            <input type="text" value={classCodeInput} onChange={(e) => setClassCodeInput(e.target.value.toUpperCase())}
-              placeholder="CLASS-XXXX" required maxLength="10"
-              className="w-full px-4 py-2 border border-gray-300 rounded uppercase focus:ring-2 focus:ring-sunshine-500 outline-none" />
-            <button type="submit" disabled={loading || !classCodeInput}
-              className="w-full px-4 py-2 bg-sunshine text-[#2D2D2D] font-bold rounded disabled:opacity-50">
-              {loading ? 'جاري الحفظ...' : 'احفظ الكود'}
-            </button>
-            {error && <p className="text-sm text-red-600">{error}</p>}
-            <p className="text-xs text-gray-400 mt-4">سيتم تفعيل الربط تلقائياً عند تسجيل دخولك لاحقاً.</p>
-          </form>
-        </div>
-      </div>
-    );
-  }
+  const handleLogout = async () => {
+    await signOut();
+  };
 
-  if (!user) return <div className="p-6 text-center">جاري التحميل...</div>;
-
-  // إذا لم يتم ربط الطالب بصف، نعرض شاشة إدخال الكود
-  if (!profile?.class_id) {
-    return (
-      <div className="min-h-screen bg-gray-50 p-6 flex flex-col items-center justify-center">
-        <div className="bg-white p-8 rounded-xl shadow border border-gray-100 text-center max-w-md w-full">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">مرحباً يا بطل! 🧒</h2>
-          <p className="text-gray-600 mb-6">لم يتم ربطك بصف بعد. يرجى إدخال كود الصف الذي أعطاه لك معلمك.</p>
-          <form onSubmit={handleJoinClass} className="space-y-4">
-            <input type="text" value={classCodeInput} onChange={(e) => setClassCodeInput(e.target.value.toUpperCase())}
-              placeholder="GAZA-4A" required maxLength="10"
-              className="w-full px-4 py-2 border border-gray-300 rounded uppercase focus:ring-2 focus:ring-sunshine-500 outline-none" />
-            <button type="submit" disabled={loading || !classCodeInput}
-              className="w-full px-4 py-2 bg-sunshine text-[#2D2D2D] font-bold rounded disabled:opacity-50">
-              {loading ? 'جاري الربط...' : 'انضم إلى صفك'}
-            </button>
-            {error && <p className="text-sm text-red-600">{error}</p>}
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  // الطالب مرتبط بصف - نعرض الصفحة الرئيسية
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">مرحباً، {profile?.full_name || 'البطل'} 🎓</h1>
-            <p className="text-gray-600">صفك: {profile.class_id}</p>
+    <div className={styles.page} dir="rtl">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className={styles.card}
+      >
+        <span className={styles.avatar}>🧒</span>
+        <h1 className={styles.title}>مرحباً يا بطل!</h1>
+        <p className={styles.subtitle}>
+          اختر كيف تريد أن تبدأ اليوم
+          {isGuest ? ' — أنت حالياً في وضع الزائر' : ''}
+        </p>
+
+        {error && <p className={styles.error}>{error}</p>}
+
+        {mode !== 'code' && (
+          <div className={styles.options}>
+            <button
+              type="button"
+              className={`${styles.optionBtn} ${mode === 'guest' ? styles.optionBtnActive : ''}`}
+              onClick={() => { setMode('code'); setError(''); }}
+              disabled={loading}
+            >
+              <span className={styles.optionIcon}>🔑</span>
+              <span className={styles.optionText}>
+                <span className={styles.optionTitle}>لدي كود صف</span>
+                <span className={styles.optionDesc}>أدخل الكود الذي أعطته لك معلمتك للانضمام إلى صفك</span>
+              </span>
+            </button>
+
+            <button
+              type="button"
+              className={`${styles.optionBtn} ${mode === 'guest' ? styles.optionBtnActive : ''}`}
+              onClick={handleGuest}
+              disabled={loading}
+            >
+              <span className={styles.optionIcon}>🧒</span>
+              <span className={styles.optionText}>
+                <span className={styles.optionTitle}>دخول كزائر (تجربة سريعة)</span>
+                <span className={styles.optionDesc}>العب وتعلم الآن بدون كود — نتائجك لن تظهر للمعلمة</span>
+              </span>
+            </button>
           </div>
-          <button onClick={handleLogout} className="px-4 py-2 bg-coral text-white font-bold rounded hover:bg-red-600">
-            تسجيل الخروج
-          </button>
-        </div>
-        <div className="bg-white p-6 rounded-xl shadow border border-gray-100 text-center">
-          <p className="text-gray-600">مرحباً بك في صفحة التعلم! اختر درساً من القائمة أعلاه للبدء.</p>
-        </div>
-      </div>
+        )}
+
+        {mode === 'code' && (
+          <form onSubmit={handleJoinClass} className={styles.form}>
+            <label className={styles.label} htmlFor="class-code">كود الصف</label>
+            <input
+              id="class-code"
+              className={styles.input}
+              type="text"
+              value={classCodeInput}
+              onChange={(e) => setClassCodeInput(e.target.value.toUpperCase())}
+              placeholder="GAZA-4A"
+              maxLength={10}
+              autoComplete="off"
+              autoFocus
+            />
+            <button type="submit" className={styles.primaryBtn} disabled={loading || !classCodeInput.trim()}>
+              {loading ? 'جاري الانضمام...' : 'انضم إلى صفك ✨'}
+            </button>
+            <button
+              type="button"
+              className={styles.logoutBtn}
+              onClick={() => { setMode(null); setError(''); }}
+              disabled={loading}
+            >
+              ← رجوع
+            </button>
+            <p className={styles.hint}>اطلب كود الصف من معلمتك إن لم يكن لديك.</p>
+          </form>
+        )}
+
+        <p className={styles.footerNote}>
+          {profile?.class_id
+            ? `أنت مرتبط بالصف: ${profile.class_id}`
+            : 'يمكنك دائماً تجربة التطبيق كزائر والعودة لاحقاً.'}
+        </p>
+      </motion.div>
     </div>
   );
 }
